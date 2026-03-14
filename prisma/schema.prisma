@@ -184,6 +184,23 @@ model PaymentRequest {
   @@map("payment_requests")
 }
 
+// Trending Niches Model (for email alerts)
+model TrendingNiche {
+  id              String   @id @default(cuid())
+  niche           String   @unique @db.VarChar(255)
+  trendScore      Float    @default(0) // Based on search volume growth
+  searchVolume    Int      @default(0)
+  growthRate      Float    @default(0)
+  lastChecked     DateTime @default(now())
+  notificationSent Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([trendScore])
+  @@index([lastChecked])
+  @@map("trending_niches")
+}
+
 
 
 
