@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js" 
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// All Enums Type 
+enum Role {
+  USER
+  ADMIN
+}
+
+
+// User Table Model 
+model User {
+  id                String @id @default(cuid())
+  name              String?
+  email             String @unique
+  emailVerified     DateTime?
+  password          String
+  image             String
+  role              Role @default(USER)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations 
+  accounts        Account[]
+  sessions        Session[]
+  subscription    Subscriptions?
+  reports         Report[]
+  usage           UsageLog[]
+  paymentRequests PaymentRequest[]
+
+  @@map("users")
+
+}
+
+/// Account Table Model 
+
+
