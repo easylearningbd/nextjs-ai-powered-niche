@@ -32,11 +32,50 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
      if(!isPasswordValid) throw new Error("Invaild credentials");
 
+     return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        image: user.image,
+     };   
+
+    }, 
+        }),
+    ],
+    callbacks: {
+        async jwt({ token, user, trigger }) {
+            if (user) {
+                token.id = user.id;
+                token.role = (user as any).role;
+                token.name = user.name;
+                token.email = user.email;
+            }
+    if (trigger === "update" || user) {
+        const updatedUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: {
+              name: true, email: true, role: true,
+              subscription: { select: { planType: true, isActive: true, endDate: true}}  
+            },
+        });
+
+    if (updatedUser) {
+       token.name = updatedUser.name;
+       token.email = updatedUser.email;
+       token.role = updatedUser.role;
+       token.subscription = updatedUser.subscription;
+    } 
+
+    }
+
+    return token; 
+   },
+  /// Work for Session 
 
 
     }
 
 
-        })
-    ]
+
 })
