@@ -73,9 +73,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
    },
   /// Work for Session 
 
-
+  async session({ session, token }) {
+    if (session.user) {
+        (session.user as any).id = token.id;
+        (session.user as any).role = token.role;
+        (session.user as any).subscription = token.subscription;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
     }
+    return session;
+  }, 
+    },
 
-
-
-})
+    pages: {
+        signIn: "/signin",
+        signOut: "/signout",
+        error: "/error",
+    },
+    session: {
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60,
+    },
+});
