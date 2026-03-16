@@ -14,6 +14,40 @@ export default function RegisterPage(){
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false); 
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+
+        if (password.length < 6) {
+            setError("Passwords must be at least 6 characters long");
+            return;
+        }
+        setIsLoading(true);
+
+        try {
+            const response = await axios.post("/api/auth/register", {
+                name,
+                email,
+                password,
+            });
+
+        if (response.status === 201 ) {
+            router.push("/signin?registered=true");
+        } 
+        } catch (error: any) {
+            if (error.response?.data?.error) {
+                 setError("Something went wrong. Plz try again");
+            }
+        }finally{
+            setIsLoading(false);
+        }
+    };
+
 
 
 
@@ -39,7 +73,7 @@ export default function RegisterPage(){
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6"  >
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}  >
          
           {error && ( 
             <div className="rounded-md bg-red-50 border border-red-200 p-4">
