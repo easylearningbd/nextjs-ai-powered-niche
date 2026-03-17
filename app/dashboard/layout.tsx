@@ -23,6 +23,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return null;
     }
 
+    const handleSignOut = async () => {
+        await signOut({ redirect: true, callbackUrl: "/signin" })
+    }
+
     const navigation = [
         { name: "Dashboard", href: "/dashboard", icon:LayoutDashboard },
         { name: "Reports", href: "/dashboard/reports", icon:FileText },
@@ -76,7 +80,7 @@ return (
                 <p className="text-xs text-gray-500">{session.user?.email}</p>
               </div>
               <button
-                
+                onClick={handleSignOut}
                 className="ml-2 p-2 rounded-lg hover:bg-gray-100 transition"
                 title="Sign out"
               >
@@ -127,7 +131,7 @@ return (
                   );
               })}
               <button
-               
+                onClick={handleSignOut}
                 className="w-full group flex items-center px-3 py-2 text-base font-medium rounded-lg hover:bg-gray-100 text-red-600"
               >
                 <LogOut className="mr-4 h-6 w-6" />
