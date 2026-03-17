@@ -75,7 +75,7 @@ async function main() {
                 create: {
                     planType: PlanType.FREE,
                     isActive: true,
-                },
+                }, 
             },
             usage: {
                 create: {
