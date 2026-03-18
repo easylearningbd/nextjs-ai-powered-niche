@@ -23,6 +23,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return null;
     }
 
+    const handleSignOut = async () => {
+        await signOut({ redirect: true, callbackUrl: "/admin-login" })
+    }
+
     const navigation = [
         { name: "Dashboard", href: "/admin", icon:LayoutDashboard },
         { name: "Payment Requests", href: "/admin/payment-requests", icon:Receipt },
@@ -81,7 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <p className="text-xs text-red-600 font-semibold">{session.user?.email}</p>
               </div>
               <button
-              
+                onClick={handleSignOut}
                 className="ml-2 p-2 rounded-lg hover:bg-gray-100 transition"
                 title="Sign out"
               >
@@ -131,7 +135,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 })}
               
               <button
-                
+                onClick={handleSignOut}
                 className="w-full group flex items-center px-3 py-2 text-base font-medium rounded-lg hover:bg-gray-100 text-red-600"
               >
                 <LogOut className="mr-4 h-6 w-6" />
