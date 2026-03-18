@@ -14,6 +14,43 @@ export default function AdminLoginPage(){
     const [isLoading, setIsLoading] = useState(false); 
 
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+        setIsLoading(true);
+
+        try {
+            const result = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+
+            if (result?.error) {
+                setError("Invalid Email or Password");
+            } else {
+        // Check i user is admin by fetching session 
+        const response = await fetch("/api/auth/session");
+        const session = await response.json();
+
+        if (session?.user?.role === "ADMIN") {
+            router.push("/admin");
+            router.refresh();
+        } else {
+            setEmail("Access denied. Admin only pprivileges required");
+            // Singout no admin - user
+            await signOut({ redirect: false})
+        }        
+            }
+            
+        } catch (error) {
+                setError("Something went wrong. Plz try again");
+        } finally{
+                setIsLoading(false);
+        } 
+    };
+
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 py-12 px-4 sm:px-6 lg:px-8">
