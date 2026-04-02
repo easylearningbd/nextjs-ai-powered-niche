@@ -4,16 +4,50 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import axios from "axios";
 import { TrendingUp, Search, AlertCircle,CheckCircle, Clock, ArrowRight, Sparkles, Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage(){
+
+    const router = useRouter();
     const { data: session} = useSession();
     const [niche, setNiche] = useState("");
     const [keyword, setKeyword] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    
 
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError("");
+      setSuccess("");
+      setIsSubmitting(true);
 
+      try {
+
+        const response = await axios.post("/api/validate", {
+          niche,
+          keyword,
+        });
+
+        setSuccess("Validation started analyzing your niche..");
+        setNiche("");
+        setKeyword("");
+
+        setTimeout(() => {
+          router.push("/dashboard/reports");
+        },2000);
+        
+      } catch (error: any) {
+        if (error.response?.data?.error) {
+           setError(error.response.data.error);
+        }else{
+           setError("Something went wrong. plz try again");
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
 
     return(
           <div className="max-w-7xl mx-auto space-y-6">
@@ -137,7 +171,7 @@ export default function DashboardPage(){
           </p>
         </div>
         <div className="px-6 py-4">
-          <form   className="space-y-4">
+          <form onSubmit={handleSubmit}  className="space-y-4">
           {error && (  
               <div className="rounded-lg bg-red-50 border border-red-200 p-4 flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
@@ -159,12 +193,12 @@ export default function DashboardPage(){
               <input
                 id="niche"
                 type="text"
-                value="niche"
-               
+                value={niche}
+                onChange={(e) => setNiche(e.target.value)}
                 placeholder="e.g., AI productivity tools for writers"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
-               
+               disabled={isSubmitting}
               />
               <p className="text-xs text-gray-500 mt-1">
                 Describe your niche in a few words
@@ -178,11 +212,12 @@ export default function DashboardPage(){
               <input
                 id="keyword"
                 type="text"
-                value="keyword"
-                 
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)} 
                 placeholder="e.g., AI writing assistant"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
+                disabled={isSubmitting}
                 
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -192,20 +227,20 @@ export default function DashboardPage(){
 
             <button
               type="submit"
-              
+              disabled={isSubmitting}
               className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full sm:w-auto"
             >
-            
+            {isSubmitting ? ( 
                 <>
                   <Clock className="w-4 h-4 mr-2 animate-spin" />
                   Starting Validation...
                 </>
-             
+             ) : ( 
                 <>
                   <Sparkles className="w-4 h-4 mr-2" />
                   Validate Niche
                 </>
-           
+           )}
             </button>
           </form>
         </div>
