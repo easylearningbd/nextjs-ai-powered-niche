@@ -134,7 +134,7 @@ model UsageLog {
 
 
 // Report Model
-model Report {
+model Report { 
   id        String       @id @default(cuid())
   userId    String
   niche     String       @db.VarChar(255)
@@ -143,7 +143,7 @@ model Report {
   isPublic  Boolean      @default(false)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
-
+ 
   // JSON fields for storing analysis data
   trendsData        Json? // Stores Google Trends data
   aiInsights        Json? // Stores AI-generated insights

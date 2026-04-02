@@ -137,7 +137,31 @@ async function processValidation(
     else viabilityRating = "LOW";
 
     /// Update report with results 
-    
+
+    await prisma.report.update({
+        where: {id: reportId},
+        data: {
+            status: ReportStatus.COMPLETED,
+            trendsData: trendsData as any,
+            aiInsights: aiInsights as any,
+            competitionData: {
+                level: aiInsights.competitionAnalysis.level,
+                keyPlayers: aiInsights.competitionAnalysis.keyPlayers
+            } as any,
+            monetizationIdeas: {
+                primary: aiInsights.monetizationStrategies.primary,
+                secondary: aiInsights.monetizationStrategies.secondary,
+            } as any,
+            gtmStrategy: aiInsights.gtmStrategy as any,
+            overallScore,
+            viabilityRating,
+            summaryText: aiInsights.summary,
+
+        },
+    });
+
+    /// Update Usage log data
+
 
 
     } catch (error) {

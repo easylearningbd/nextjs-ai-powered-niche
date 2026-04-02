@@ -8,7 +8,7 @@ export interface AIMarketInsights {
     reasoning: string;
     strengths: string[];
     weaknesses: string[];
-  };
+  }; 
   targetAudience: {
     demographics: string;
     psychographics: string;
