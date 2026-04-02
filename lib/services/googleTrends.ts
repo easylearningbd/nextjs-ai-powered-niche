@@ -26,7 +26,7 @@ export interface TrendsAnalysisResult {
 
 }
 
-
+ 
 /// Google trends service for analyzing search trends.
 
 export class GoogleTrendsService {

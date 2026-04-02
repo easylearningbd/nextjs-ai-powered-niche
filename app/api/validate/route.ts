@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Process asynchronously
+    processValidation(report.id,niche,keyword,isPro);
 
     return NextResponse.json(
         {
@@ -94,4 +95,57 @@ export async function POST(req: NextRequest) {
     } catch (error) {
         console.error("Valiadtion api error", error);
     }
+}
+
+
+/// Process validation asynchronously 
+async function processValidation(
+    reportId: string,
+    niche: string,
+    keyword: string,
+    isPro: boolean
+){
+
+    try {
+        /// update status to PROCESSING
+        await prisma.report.update({
+            where: {id: reportId },
+            data: { status: ReportStatus.PROCESSING },
+        });
+
+    // Initialize services 
+    const trendsService = new GoogleTrendsService();
+    const openaiService = new OpenAIService();
+
+    // Collect data from google trends 
+    console.log(`[Report ${reportId} ] Starting google trends analysis..`);
+    const trendsData = await trendsService.analyzeKeyword(keyword, isPro);
+
+    console.log(`[Report ${reportId} ] Generating ai insights`);
+    const aiInsights = await openaiService.generateMarketInsights(
+        niche,
+        keyword,
+        trendsData,
+        isPro
+    );
+
+    // Calculate overall score and viability 
+    const overallScore = aiInsights.opportunityAssessment.score;
+    let viabilityRating: string;
+    if(overallScore >= 70 ) viabilityRating = "HIGH";
+    else if (overallScore >= 40 ) viabilityRating = "MEDIUM";
+    else viabilityRating = "LOW";
+
+    /// Update report with results 
+    
+
+
+    } catch (error) {
+        
+    }
+
+
+
+
+
 }
