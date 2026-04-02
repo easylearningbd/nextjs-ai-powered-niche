@@ -7,6 +7,13 @@ import { TrendingUp, Search, AlertCircle,CheckCircle, Clock, ArrowRight, Sparkle
 
 export default function DashboardPage(){
     const { data: session} = useSession();
+    const [niche, setNiche] = useState("");
+    const [keyword, setKeyword] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
+
 
     return(
           <div className="max-w-7xl mx-auto space-y-6">
@@ -131,19 +138,19 @@ export default function DashboardPage(){
         </div>
         <div className="px-6 py-4">
           <form   className="space-y-4">
-            
+          {error && (  
               <div className="rounded-lg bg-red-50 border border-red-200 p-4 flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-red-800">error</p>
+                <p className="text-sm text-red-800">{error}</p>
               </div>
-           
+           )}
 
-            
+            {success && (
               <div className="rounded-lg bg-green-50 border border-green-200 p-4 flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-green-800">success</p>
+                <p className="text-sm text-green-800">{success}</p>
               </div>
-         
+          )}
 
             <div>
               <label htmlFor="niche" className="block text-sm font-medium text-gray-700 mb-2">
