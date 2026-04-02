@@ -161,15 +161,47 @@ async function processValidation(
     });
 
     /// Update Usage log data
+    const report = await prisma.report.findUnique({
+        where: { id: reportId },
+        select: { userId: true },
+    });
 
+    if (report) {
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
 
+    await prisma.usageLog.upsert({
+        where: {
+            userId_month_year: {
+                userId: report.userId,
+                month: currentMonth,
+                year: currentYear,
+            },
+        },
+        create: {
+            userId: report.userId,
+            month: currentMonth,
+            year: currentYear,
+            validationCount: 1,
+        },
+        update: {
+            validationCount: { increment: 1},
+        },
+    });
 
-    } catch (error) {
-        
     }
+   console.log(`[Report ${reportId} ] validation completed successfully`);
+    } catch (error) {
+       console.error(`[Report ${reportId} ] validation failed`, error); 
 
+    // Update report failed status 
+    await prisma.report.update({
+        where: {id: reportId},
+        data: {
+            status: ReportStatus.FAILED,
+            summaryText: "Validation failed. Plz try again",
+        },
+    });
 
-
-
-
+    }
 }
