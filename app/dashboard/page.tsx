@@ -36,12 +36,15 @@ export default function DashboardPage(){
     const [usage, setUsage] = useState<UsageData | null>(null);
     const [isLoadingReports, setIsLoadingReports] = useState(true);
 
+    useEffect(() => {
+      fetchReports();
+    },[]);
     
     const fetchReports = async () => {
       try {
         const reponse = await axios.get("/api/reports");
         setReports(reponse.data.reports.slice(0,5)); // Show only 5 report
-      
+        //console.log(reponse.data);
       } catch (error) {
         console.error("Error fetching reports", error);
       } finally {
