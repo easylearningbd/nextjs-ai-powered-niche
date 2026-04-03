@@ -343,15 +343,15 @@ export default function DashboardPage(){
           </div>
         </div>
         <div className="px-6 py-4">
-          
+        {isLoadingReports ? ( 
             <div className="space-y-3">
-              
-                <div   className="animate-pulse">
+            {[1,2,3].map((i) => ( 
+                <div key={i}  className="animate-pulse">
                   <div className="h-20 bg-gray-100 rounded-lg"></div>
                 </div>
-             
+             ) )}
             </div>
-          
+          ) : reports.length === 0 ? (
             <div className="text-center py-12">
               <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -361,42 +361,53 @@ export default function DashboardPage(){
                 Start validating your first niche to see results here
               </p>
             </div>
-        
+         ) : ( 
             <div className="space-y-3">
-              
+              {reports.map((report) => ( 
                 <Link
-                
-                  href={`/dashboard/reports/id`}
+                  key={report.id}
+                  href={`/dashboard/reports/${report.id}`}
                   className="block p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                       status
-                        <h4 className="font-medium text-gray-900">niche</h4>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-2">keyword</p>
-                      <div className="flex items-center gap-3 text-xs text-gray-500">
-                        <span>
-                        createdAt
-                        </span>
-                        
-                          <span>Score: overallScore/100</span>
-                        
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                       
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800`}>
-                         viabilityRating
-                        </span>
-                     
-                    </div>
-                  </div>
-                </Link>
-              
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            {getStatusIcon(report.status)}
+            <h4 className="font-medium text-gray-900">{report.niche}</h4>
+          </div>
+          <p className="text-sm text-gray-600 mb-2">{report.keyword}</p>
+          <div className="flex items-center gap-3 text-xs text-gray-500">
+            <span>
+            {new Date(report.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric"
+            })}
+            </span>
+            {report.overallScore !== null && ( 
+              <span>Score: {report.overallScore}/100</span>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          {getStatusBadge(report.status)}
+          {report.viabilityRating && ( 
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              report.viabilityRating === "HIGH"
+              ? "bg-green-100 text-green-800"
+              : report.viabilityRating === "MEDIUM"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-red-100 text-red-800"
+            } `}>
+              {report.viabilityRating}
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
+              ) )}
             </div>
-          
+          )}
         </div>
       </div>
 
