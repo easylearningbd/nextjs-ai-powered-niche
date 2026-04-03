@@ -84,6 +84,50 @@ export default function DashboardPage(){
       }
     }
 
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "COMPLETED":
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completed</span>
+     
+      case "PROCESSING":
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Processing</span>
+
+      case "PENDING":
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+
+      case "FAILED":
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Failed</span>
+       
+      default:
+       return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{status}</span>
+    } 
+  };
+
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "COMPLETED":
+        return <CheckCircle className="w-4 h-4 text-green-600"/>;
+
+      case "PROCESSING":
+      return <Clock className="w-4 h-4 text-blue-600 animate-spin"/>;
+
+      case "PENDING":
+      return <Clock className="w-4 h-4 text-yellow-600"/>;
+
+      case "FAILED":
+      return <AlertCircle className="w-4 h-4 text-red-600"/>; 
+    
+      default:
+        return null;
+    }
+  }
+
+
+
+
+
     return(
           <div className="max-w-7xl mx-auto space-y-6">
       {/* Welcome Section */}
