@@ -38,6 +38,7 @@ export default function DashboardPage(){
 
     useEffect(() => {
       fetchReports();
+      fetchUsage();
     },[]);
     
     const fetchReports = async () => {
@@ -51,6 +52,25 @@ export default function DashboardPage(){
         setIsLoadingReports(false);
       }
     };
+
+
+    const fetchUsage = async () => {
+      try {
+        const reponse = await axios.get("/api/usage");
+        setUsage(reponse.data);  
+         console.log(reponse.data);
+      } catch (error) {
+        console.error("Error fetching reports", error);
+        // set default for free users 
+        setUsage({ used: 0, limit: 3, percentage:0, isPro:false })
+      }  
+    };
+
+
+
+
+
+
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
