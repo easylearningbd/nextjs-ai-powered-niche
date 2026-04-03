@@ -208,43 +208,52 @@ export default function DashboardPage(){
           </p>
         </div>
       </div>
-      
+      {!usage.isPro && ( 
         <Link href="/dashboard/settings">
           <button className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
             Upgrade to Pro
           </button>
         </Link>
-        
+        )}
     </div>
   </div>
   <div className="px-6 pb-4">
-  
+  {!usage.isPro ? (
       <>
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600 font-medium">Usage Progress</span>
-            <span className="text-gray-900 font-semibold">percentage%</span>
+            <span className="text-gray-900 font-semibold">{usage.percentage}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
             <div
-              className={`h-3 rounded-full transition-all duration-300 bg-red-600`}
-              
+              className={`h-3 rounded-full transition-all duration-300
+                ${usage.percentage >= 100
+                  ? "bg-red-600"
+                  : usage.percentage >= 66
+                  ? "bg-yellow-600"
+                  : "bg-blue-600"
+                 } `}
+              style={{ width: `${Math.min(usage.percentage, 100)}%`}}
             />
           </div>
           <p className="text-xs text-gray-600">
-            
-              No validations  
-            
+            {usage.limit - usage.used > 0 
+            ? `${usage.limit - usage.used} validation${usage.limit - usage.used !== 1 ? 's' : ""} remaining`
+            : "No Validations remaining"
+            }  
           </p>
         </div>
-        
+        {usage.used >=  usage.limit && ( 
           <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-sm text-red-800 font-medium">
               ⚠️ Monthly limit reached! Upgrade to Pro for unlimited validations.
             </p>
           </div>
-        
+        )}
       </>
+
+       ) : (
   
       <div className="p-4 bg-white/60 rounded-lg border border-purple-100">
         <div className="flex items-center gap-2 text-purple-900">
@@ -255,7 +264,7 @@ export default function DashboardPage(){
           Enjoy unlimited niche validations with advanced AI insights
         </p>
       </div>
-    
+     )}
   </div>
 </div>
 ) }    
