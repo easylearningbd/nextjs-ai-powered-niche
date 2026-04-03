@@ -6,6 +6,23 @@ import axios from "axios";
 import { TrendingUp, Search, AlertCircle,CheckCircle, Clock, ArrowRight, Sparkles, Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+interface Report {
+  id: string;
+  niche: string;
+  keyword: string;
+  status: string;
+  overallScore: number | null;
+  viabilityRating: string | null;
+  createdAt: string;
+}
+
+interface UsageData {
+  used: number;
+  limit: number;
+  percentage: number;
+  isPro: boolean;
+}
+
 export default function DashboardPage(){
 
     const router = useRouter();
@@ -15,7 +32,22 @@ export default function DashboardPage(){
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [reports, setReports] = useState<Report[]>([]);
+    const [usage, setUsage] = useState<UsageData | null>(null);
+    const [isLoadingReports, setIsLoadingReports] = useState(true);
+
     
+    const fetchReports = async () => {
+      try {
+        const reponse = await axios.get("/api/reports");
+        setReports(reponse.data.reports.slice(0,5)); // Show only 5 report
+      
+      } catch (error) {
+        console.error("Error fetching reports", error);
+      } finally {
+        setIsLoadingReports(false);
+      }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
