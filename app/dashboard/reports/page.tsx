@@ -163,82 +163,96 @@ export default function ReportsPage(){
             <div className="text-center">
               <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No reports found
+            {filter === "all" ? "No reports found" : `No ${filter.toLocaleLowerCase()} reports`}
+                
               </h3>
               <p className="text-gray-600 mb-4">
-               Start validating your first niche to see reports here
+                {filter === "all"
+                ? "Start validating your first niche to see reports here"
+                : "Try changing the filter to see other reports"
+            }              
               </p>
-               
+               {filter === "all" && (
                 <Link
                   href="/dashboard"
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
                 >
                   Create First Validation
                 </Link>
-               
+                )}
             </div>
           </div>
         </div>
       ) : ( 
         <div className="space-y-4">
-          
-            <div   className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition">
-              <div className="py-6 px-6">
-                <div className="flex items-start justify-between">
-                  {/* Report Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                     status
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">niche</h3>
-                        <p className="text-sm text-gray-600">keyword</p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                      <div className="flex items-center gap-2">
-                       
-                        
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800`}>
-                              Viability
-                          </span>
-                        
-                      </div>
-                   
-                        <span className="font-medium">Score: report/100</span>
-                     
-                      <span>
-                        Created: createdAt
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 ml-4">
-                    
-                      <Link
-                        href={`/dashboard/reports/id`}
-                        className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        View
-                      </Link>
-                 
-                    <button
-                      
-                      className="inline-flex items-center justify-center p-1.5 text-white bg-red-600 hover:bg-red-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                    
-                        <Clock className="w-4 h-4 animate-spin" />
-                      
-                        <Trash2 className="w-4 h-4" />
-                       
-                    </button>
-                  </div>
+        {filteredReports.map((report) => (  
+    <div key={report.id}  className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition">
+        <div className="py-6 px-6">
+        <div className="flex items-start justify-between">
+            {/* Report Info */}
+            <div className="flex-1">
+            <div className="flex items-center gap-3 mb-3">
+                {getStatusIcon(report.status)}
+                <div>
+                <h3 className="text-lg font-semibold text-gray-900">{report.niche}</h3>
+                <p className="text-sm text-gray-600">{report.keyword}</p>
                 </div>
-              </div>
             </div>
-          
+
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+            {getStatusBadge(report.status)}    
+               {report.viabilityRating && ( 
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        report.viabilityRating === "HIGH"
+                        ? "bg-green-100 text-green-800"
+                        : report.viabilityRating === "MEDIUM"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                    } `}>
+                        {report.viabilityRating} Viability
+                    </span>
+                )} 
+                </div>
+            {report.overallScore !== null && (
+                <span className="font-medium">Score: {report.overallScore}/100</span>
+              )}
+                <span>
+            Created: {new Date(report.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric"
+            })}
+                </span>
+            </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2 ml-4">
+            {report.status === "COMPLETED" && ( 
+                <Link
+                href={`/dashboard/reports/id`}
+                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                >
+                <Eye className="w-4 h-4 mr-2" />
+                View
+                </Link>
+            )}
+            <button
+                
+                className="inline-flex items-center justify-center p-1.5 text-white bg-red-600 hover:bg-red-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+            
+                <Clock className="w-4 h-4 animate-spin" />
+                
+                <Trash2 className="w-4 h-4" />
+                
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+    ))} 
         </div>
      )} 
 
