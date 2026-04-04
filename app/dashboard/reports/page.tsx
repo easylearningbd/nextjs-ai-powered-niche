@@ -54,6 +54,29 @@ export default function ReportsPage(){
     };
 
 
+    const handleDelete = async (id: string) => {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this report? this action cannot be undone"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setDeletingId(id);
+
+        try {
+            await axios.delete(`/api/reports/${id}`);
+            setReports(reports.filter((r) => r.id !== id))
+            alert("Report deleted successfully");
+        } catch (error) {
+            console.error("Error deleting report", error);
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+
     const getStatusBadge = (status: string) => {
     switch (status) {
       case "COMPLETED":
@@ -239,14 +262,15 @@ export default function ReportsPage(){
                 </Link>
             )}
             <button
-                
+                onClick={() => handleDelete(report.id)}
+                disabled={deletingId === report.id } 
                 className="inline-flex items-center justify-center p-1.5 text-white bg-red-600 hover:bg-red-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-            
+            {deletingId === report.id ? ( 
                 <Clock className="w-4 h-4 animate-spin" />
-                
+              ) : ( 
                 <Trash2 className="w-4 h-4" />
-                
+               )}   
             </button>
             </div>
         </div>
