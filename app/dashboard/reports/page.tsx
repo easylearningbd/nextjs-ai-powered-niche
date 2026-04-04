@@ -257,32 +257,32 @@ export default function ReportsPage(){
      )} 
 
       {/* Stats Summary */}
-     
+     {!isLoading && reports.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-6 py-4">
             <p className="text-sm text-gray-600">Total</p>
-            <div className="text-2xl font-bold">Total</div>
+            <div className="text-2xl font-bold">{reports.length}</div>
           </div>
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-6 py-4">
             <p className="text-sm text-gray-600">Completed</p>
             <div className="text-2xl font-bold text-green-600">
-             COMPLETED
+             {reports.filter((r) => r.status === "COMPLETED").length}
             </div>
           </div>
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-6 py-4">
             <p className="text-sm text-gray-600">Processing</p>
             <div className="text-2xl font-bold text-blue-600">
-             PROCESSING
+            {reports.filter((r) => r.status === "PROCESSING").length}
             </div>
           </div>
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-6 py-4">
             <p className="text-sm text-gray-600">Failed</p>
             <div className="text-2xl font-bold text-red-600">
-            Failed
+            {reports.filter((r) => r.status === "FAILED").length}
             </div>
           </div>
         </div>
-     
+     )}
     </div>
     )
 }
