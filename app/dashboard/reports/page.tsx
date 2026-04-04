@@ -54,6 +54,50 @@ export default function ReportsPage(){
     };
 
 
+    const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "COMPLETED":
+        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completed</span>
+     
+      case "PROCESSING":
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Processing</span>
+
+      case "PENDING":
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+
+      case "FAILED":
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Failed</span>
+       
+      default:
+       return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{status}</span>
+    } 
+  };
+
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "COMPLETED":
+        return <CheckCircle className="w-4 h-4 text-green-600"/>;
+
+      case "PROCESSING":
+      return <Clock className="w-4 h-4 text-blue-600 animate-spin"/>;
+
+      case "PENDING":
+      return <Clock className="w-4 h-4 text-yellow-600"/>;
+
+      case "FAILED":
+      return <AlertCircle className="w-4 h-4 text-red-600"/>; 
+    
+      default:
+        return null;
+    }
+  }
+
+  const filteredReports = reports.filter((report) => {
+    if (filter === "all") return true;  
+    return report.status === filter;
+  })
+
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">
@@ -78,25 +122,31 @@ export default function ReportsPage(){
             <Filter className="w-4 h-4 text-gray-600" />
             <span className="text-sm font-medium text-gray-700">Filter:</span>
             <div className="flex gap-2">
-              
+    {["all", "COMPLETED","PROCESSING","PENDING","FAILED"].map((status) => ( 
+    
                 <button
-                   
-                   
-                  className={`px-3 py-1 text-sm rounded-lg transition bg-blue-600 text-white`}
+                  key={status}
+                  onClick={() => setFilter(status)} 
+                  className={`px-3 py-1 text-sm rounded-lg transition 
+                   ${
+                    filter === status 
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                   } `}
                 >
-                  All
+                {status === "all" ? "All" : status.charAt(0) + status.slice(1).toLocaleLowerCase()}  
                 </button>
-               
+                ))}  
             </div>
           </div>
         </div>
       </div>
 
       {/* Reports List */}
-       
+    {isLoading ? (   
         <div className="space-y-4">
-        
-            <div   className="bg-white rounded-lg border border-gray-200 shadow-sm">
+        {[1,2,3,4,5].map((i) => ( 
+            <div key={i}  className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <div className="py-6 px-6">
                 <div className="animate-pulse space-y-3">
                   <div className="h-6 bg-gray-200 rounded w-1/3"></div>
@@ -105,9 +155,9 @@ export default function ReportsPage(){
                 </div>
               </div>
             </div>
-          
+          ))}
         </div>
-      
+      ) : filteredReports.length === 0 ? ( 
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
           <div className="py-12 px-6">
             <div className="text-center">
@@ -129,7 +179,7 @@ export default function ReportsPage(){
             </div>
           </div>
         </div>
-      
+      ) : ( 
         <div className="space-y-4">
           
             <div   className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition">
@@ -190,7 +240,7 @@ export default function ReportsPage(){
             </div>
           
         </div>
- 
+     )} 
 
       {/* Stats Summary */}
      
