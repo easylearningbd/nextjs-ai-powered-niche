@@ -298,48 +298,62 @@ export default function ReportDetailPage() {
     </div>
 
               {/* Timeline Data */}
-              
+    {report.trendsData.timelineData && report.trendsData.timelineData.length > 0 && (           
     <div>
         <h4 className="font-semibold text-gray-900 mb-3">Search Volume Trend</h4>
         <div className="relative bg-gray-50 rounded-lg p-4" style={{ height: '160px' }}>
+        {(() => {
+            const dataPoints = report.trendsData.timelineData.slice(-12);
+            const maxValue = Math.max(...dataPoints.map((d: any) => d.value), 1);
+            const cartHeight = 128;
+       
         
-            
+        return ( 
             <>
-                <div className="flex items-end justify-between gap-1"  >
-                    
+                <div className="flex items-end justify-between gap-1" style={{height: `${cartHeight}px`}} >
+                
+                {dataPoints.map((item: any, index: number) => {
+                    const heightPx = (item.value / maxValue) * cartHeight;
                     const isZero = item.value === 0;
-                    
-                    <div   className="flex-1 group relative">
-                        <div
-                        className={`w-full rounded-t transition-all bg-gray-300 hover:bg-gray-400`}
-                        
-                        >
-                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                        time<br />
-                            Value:  
-                        </div>
-                        </div>
-                    </div>
-                    
+            
+    return (  
+        
+        <div key={index}  className="flex-1 group relative">
+            <div
+            className={`w-full rounded-t transition-all ${
+                isZero
+                ? "bg-gray-300 hover:bg-gray-400"
+                : "bg-blue-500 hover:bg-blue-600"
+            } `}
+            style={{ height: `${heightPx}px`, minHeight:isZero ? "3px" : "5px" }}
+            >
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+            {item.time}<br />
+                Value:  {item.value} 
+            </div>
+            </div>
+        </div>
+    ); 
+    })}    
                 
                 </div>
                 <div className="absolute top-2 right-2 text-xs text-gray-400">
-                Peak:maxValue
+                Peak: {maxValue}
                 </div>
             </>
-            
-        
+            )  
+         })()}
         </div>
         <div className="text-xs text-gray-500 text-center mt-2">
-        Last  periods • Scaled for visibility
+        Last {Math.min(12, report.trendsData.timelineData.length)} periods • Scaled for visibility
         </div>
-        
+        {report.trendsData.timelineData.slice(-12).filter((d: any) => d.value === 0).length > 0 && (
         <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-gray-600">
             <strong>Note:</strong> Gray bars indicate periods with zero search volume. This is normal for new or very niche keywords.
         </div>
-        
+         )}
     </div>
-
+ )}
 
     {/* Related Queries */}
     
