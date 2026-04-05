@@ -254,7 +254,7 @@ export default function ReportsPage(){
             <div className="flex items-center gap-2 ml-4">
             {report.status === "COMPLETED" && ( 
                 <Link
-                href={`/dashboard/reports/id`}
+                href={`/dashboard/reports/${report.id}`}
                 className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
                 >
                 <Eye className="w-4 h-4 mr-2" />
