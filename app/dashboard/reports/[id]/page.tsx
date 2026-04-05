@@ -229,7 +229,7 @@ export default function ReportDetailPage() {
      )} 
 
       {/* AI Insights - Opportunity Assessment */}
-     
+     {report.aiInsights?.opportunityAssessment && ( 
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
@@ -242,119 +242,127 @@ export default function ReportDetailPage() {
               <CheckCircle className="w-5 h-5 text-green-600 mt-1" />
               <div className="flex-1">
                 <p className="text-gray-700 leading-relaxed">
-                  
+    {report.aiInsights.opportunityAssessment.reasoning || "No Assesment available"}
                 </p>
               </div>
             </div>
-           
+    {report.aiInsights.opportunityAssessment.score && ( 
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                 <div className="text-sm text-gray-600">Opportunity Score</div>
                 <div className="text-3xl font-bold text-blue-600">
-                  score/100
+                  {report.aiInsights.opportunityAssessment.score}/100
                 </div>
               </div>
-             
+             )}
           </div>
         </div>
-      
+      )}
 
       {/* Search Trends */}
       <div className="grid grid-cols-1 gap-6">
-         
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
-                Search Trends
-              </h2>
-            </div>
-            <div className="px-6 py-4 space-y-4">
-              {/* Trend Overview */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <div className="text-sm text-gray-600">Avg Interest</div>
-                  <div className="text-2xl font-bold text-blue-600">
-                    0/100
-                  </div>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <div className="text-sm text-gray-600">Growth</div>
-                  <div className={`text-2xl font-bold text-green-600`}>
-                   
-                      
-                    
-                      <span className="text-xs block text-gray-500">Very High Growth</span>
-                    
-                  </div>
-                </div>
-              </div>
+
+ {report.trendsData && (       
+<div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+<div className="px-6 py-4 border-b border-gray-200">
+    <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+    <TrendingUp className="w-5 h-5 text-blue-600" />
+    Search Trends
+    </h2>
+</div>
+<div className="px-6 py-4 space-y-4">
+    {/* Trend Overview */}
+    <div className="grid grid-cols-2 gap-4">
+    <div className="p-4 bg-blue-50 rounded-lg">
+        <div className="text-sm text-gray-600">Avg Interest</div>
+        <div className="text-2xl font-bold text-blue-600">
+        {report.trendsData.averageInterest || 0}/100
+        </div>
+    </div>
+    <div className="p-4 bg-green-50 rounded-lg">
+        <div className="text-sm text-gray-600">Growth</div>
+        <div className={`text-2xl font-bold ${
+            report.trendsData.growthRate > 0 ? "text-green-600" :
+            report.trendsData.growthRate < 0 ? "text-red-600" : "text-gray-600"
+        }`}>
+        
+         {(() => {
+        const growth = report.trendsData.growthRate || 0;
+        const displayGrowth = Math.max(-999, Math.min(999, growth));
+        return `${displayGrowth > 0 ? "+" : ""}${displayGrowth.toFixed(1)}%`;
+        })()}        
+        {Math.abs(report.trendsData.growthRate || 0) > 999 && (
+            <span className="text-xs block text-gray-500">Very High Growth</span>
+         )}
+        </div>
+    </div>
+    </div>
 
               {/* Timeline Data */}
               
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Search Volume Trend</h4>
-                  <div className="relative bg-gray-50 rounded-lg p-4" style={{ height: '160px' }}>
+    <div>
+        <h4 className="font-semibold text-gray-900 mb-3">Search Volume Trend</h4>
+        <div className="relative bg-gray-50 rounded-lg p-4" style={{ height: '160px' }}>
+        
+            
+            <>
+                <div className="flex items-end justify-between gap-1"  >
                     
-                       
-                        <>
-                          <div className="flex items-end justify-between gap-1"  >
-                             
-                              const isZero = item.value === 0;
-                              
-                                <div   className="flex-1 group relative">
-                                  <div
-                                    className={`w-full rounded-t transition-all bg-gray-300 hover:bg-gray-400`}
-                                  
-                                  >
-                                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                    time<br />
-                                      Value:  
-                                    </div>
-                                  </div>
-                                </div>
-                              
-                           
-                          </div>
-                          <div className="absolute top-2 right-2 text-xs text-gray-400">
-                            Peak:maxValue
-                          </div>
-                        </>
-                     
-                   
-                  </div>
-                  <div className="text-xs text-gray-500 text-center mt-2">
-                    Last  periods • Scaled for visibility
-                  </div>
-                  
-                    <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-gray-600">
-                      <strong>Note:</strong> Gray bars indicate periods with zero search volume. This is normal for new or very niche keywords.
-                    </div>
-                 
-                </div>
-           
-
-              {/* Related Queries */}
-              
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Related Searches</h4>
-                  <div className="space-y-2">
-                   
-                      <div   className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <span className="text-sm text-gray-700">query</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500"  ></div>
-                          </div>
-                          <span className="text-xs text-gray-500 w-8">value%</span>
+                    const isZero = item.value === 0;
+                    
+                    <div   className="flex-1 group relative">
+                        <div
+                        className={`w-full rounded-t transition-all bg-gray-300 hover:bg-gray-400`}
+                        
+                        >
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                        time<br />
+                            Value:  
                         </div>
-                      </div>
+                        </div>
+                    </div>
                     
-                  </div>
+                
                 </div>
-             
+                <div className="absolute top-2 right-2 text-xs text-gray-400">
+                Peak:maxValue
+                </div>
+            </>
+            
+        
+        </div>
+        <div className="text-xs text-gray-500 text-center mt-2">
+        Last  periods • Scaled for visibility
+        </div>
+        
+        <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-gray-600">
+            <strong>Note:</strong> Gray bars indicate periods with zero search volume. This is normal for new or very niche keywords.
+        </div>
+        
+    </div>
+
+
+    {/* Related Queries */}
+    
+    <div>
+        <h4 className="font-semibold text-gray-900 mb-2">Related Searches</h4>
+        <div className="space-y-2">
+        
+            <div   className="flex items-center justify-between p-2 bg-gray-50 rounded">
+            <span className="text-sm text-gray-700">query</span>
+            <div className="flex items-center gap-2">
+                <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-full bg-blue-500"  ></div>
+                </div>
+                <span className="text-xs text-gray-500 w-8">value%</span>
             </div>
-          </div>
-       
+            </div>
+        
+        </div>
+    </div>
+    
+</div>
+</div>
+ )}      
       </div>
 
       {/* Target Audience */}
