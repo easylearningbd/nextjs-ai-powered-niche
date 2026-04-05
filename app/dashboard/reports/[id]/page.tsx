@@ -46,7 +46,52 @@ export default function ReportDetailPage() {
         }
     }
 
+   const getViabilityColor = (rating: string) => {
+    switch (rating) {
+      case "HIGH":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "MEDIUM":
+        return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      case "LOW":
+        return "bg-red-100 text-red-800 border-red-300";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-300";
+    }
+  };
 
+  const getScoreColor = (score: number) => {
+    if (score >= 75) return "text-green-600";
+    if (score >= 50) return "text-yellow-600";
+    return "text-red-600";
+  };
+
+   if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-64 bg-gray-200 rounded"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="h-96 bg-gray-200 rounded"></div>
+            <div className="h-96 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  } 
+
+
+  if (error || !report) {
+    return (
+        <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+                <p>The report you are looking for doesn't exits</p>
+
+            </div>
+
+        </div>
+    )
+  }
 
     return (
           
@@ -82,15 +127,15 @@ export default function ReportDetailPage() {
       <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-gray-200 rounded-lg">
         <div className="py-8 px-6">
           <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold text-gray-900">niche</h1>
+            <h1 className="text-4xl font-bold text-gray-900">{report?.niche}</h1>
             <p className="text-lg text-gray-600">
-              Keyword: <span className="font-semibold">keyword</span>
+              Keyword: <span className="font-semibold">{report?.keyword}</span>
             </p>
 
             <div className="flex items-center justify-center gap-6 mt-6">
               <div className="text-center">
-                <div className={`text-6xl font-bold  `}>
-                 overallScore
+                <div className={`text-6xl font-bold ${getScoreColor(report.overallScore)} `}>
+                 {report?.overallScore}
                   <span className="text-3xl">/100</span>
                 </div>
                 <p className="text-sm text-gray-600 mt-2">Overall Score</p>
@@ -100,16 +145,22 @@ export default function ReportDetailPage() {
 
               <div className="text-center">
                 <div
-                  className={`inline-block px-6 py-3 rounded-full text-2xl font-bold border-2  `}
+                  className={`inline-block px-6 py-3 rounded-full text-2xl font-bold border-2 ${getViabilityColor(report.viabilityRating)} `}
                 >
-                viabilityRating
+                {report.viabilityRating}
                 </div>
                 <p className="text-sm text-gray-600 mt-2">Viability Rating</p>
               </div>
             </div>
 
             <div className="text-sm text-gray-500 mt-4">
-              Generated on  
+              Generated on  {new Date(report.createdAt).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              })}
             </div>
           </div>
         </div>
