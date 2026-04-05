@@ -167,7 +167,7 @@ export default function ReportDetailPage() {
       </div>
 
       {/* Key Metrics Grid */}
-     
+    {report.trendsData && ( 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
             <div className="py-4 px-6">
@@ -177,7 +177,7 @@ export default function ReportDetailPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-gray-900">
-                    N/A
+                    {report.trendsData.averageInterest || "N/A"}  
                   </div>
                   <div className="text-sm text-gray-600">Avg. Interest</div>
                 </div>
@@ -193,13 +193,17 @@ export default function ReportDetailPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-gray-900">
-                     
-                  </div>
+                    {(() => {
+                        const growth = report.trendsData.growthRate || 0;
+                        const displayGrowth = Math.max(-999, Math.min(999, growth));
+                        return `${displayGrowth > 0 ? "+" : ""}${displayGrowth.toFixed(1)}%`;
+                    })()}                     
+                  </div> 
                   <div className="text-sm text-gray-600">
                     Growth Rate
-                   
+                   {Math.abs(report.trendsData.growthRate || 0) > 999 && ( 
                       <span className="text-xs block text-gray-500">Very High Growth</span>
-                    
+                    )}
                   </div>
                 </div>
               </div>
@@ -214,7 +218,7 @@ export default function ReportDetailPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-gray-900">
-                   N/A
+                 {report.trendsData?.trend || "N/A"}  
                   </div>
                   <div className="text-sm text-gray-600">Trend Status</div>
                 </div>
@@ -222,7 +226,7 @@ export default function ReportDetailPage() {
             </div>
           </div>
         </div>
-     
+     )} 
 
       {/* AI Insights - Opportunity Assessment */}
      
