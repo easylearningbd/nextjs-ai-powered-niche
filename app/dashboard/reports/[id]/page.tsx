@@ -5,7 +5,48 @@ import axios from "axios";
 import { ArrowLeft, TrendingUp, Users, DollarSign, Target, Lightbulb, Download, AlertCircle, Share2, BarChart3, Globe, Zap, CheckCircle} from "lucide-react";
 import Link from "next/link";
 
+interface Report {
+    id: string;
+    niche: string;
+    keyword: string;
+    status: string;
+    overallScore: number;
+    viabilityRating: string;
+    trendsData: any;
+    aiInsights: any;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export default function ReportDetailPage() {
+
+    const params = useParams();
+    const router = useRouter();
+    const [report, setReport] = useState<Report | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (params.id) {
+            fetchReport(params.id as string)
+        }
+    },[params.id]);
+
+
+    const fetchReport = async (id: string) => {
+        try {
+            const response = await axios.get(`/api/reports/${id}`);
+            const reportData = response.data.report;
+            console.log("Report data",reportData );
+            setReport(reportData);
+        } catch (error) {
+            console.error("Error fetching report", error);
+        }finally{
+            setIsLoading(false);
+        }
+    }
+
+
 
     return (
           
