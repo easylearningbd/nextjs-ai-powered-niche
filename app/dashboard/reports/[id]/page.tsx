@@ -356,31 +356,31 @@ export default function ReportDetailPage() {
  )}
 
     {/* Related Queries */}
-    
+{report.trendsData.relatedQueries.top && report.trendsData.relatedQueries.top.length > 0 && ( 
     <div>
         <h4 className="font-semibold text-gray-900 mb-2">Related Searches</h4>
         <div className="space-y-2">
-        
-            <div   className="flex items-center justify-between p-2 bg-gray-50 rounded">
-            <span className="text-sm text-gray-700">query</span>
+        {report.trendsData.relatedQueries.top.slice(0,5).map((query: any, index: number) => ( 
+            <div key={index}  className="flex items-center justify-between p-2 bg-gray-50 rounded">
+            <span className="text-sm text-gray-700">{query.query}</span>
             <div className="flex items-center gap-2">
                 <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500"  ></div>
+                <div className="h-full bg-blue-500" style={{ width: `${query.value}`}} ></div>
                 </div>
-                <span className="text-xs text-gray-500 w-8">value%</span>
+                <span className="text-xs text-gray-500 w-8">{query.value}%</span>
             </div>
             </div>
-        
+        ))}
         </div>
     </div>
-    
+    )}
 </div>
 </div>
  )}      
       </div>
 
       {/* Target Audience */}
-     
+     {report.aiInsights.targetAudience && ( 
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
@@ -390,39 +390,40 @@ export default function ReportDetailPage() {
           </div>
           <div className="px-6 py-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             
+            {report.aiInsights.targetAudience.demographics && ( 
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-2">Demographics</h4>
                   <p className="text-sm text-gray-700">
-                   demographics
+                   {report.aiInsights.targetAudience.demographics}
                   </p>
                 </div>
-              
-             
+              )}
+             {report.aiInsights.targetAudience.psychographics && (
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-2">Psychographics</h4>
                   <p className="text-sm text-gray-700">
-                   psychographics
+                   {report.aiInsights.targetAudience.psychographics}
                   </p>
                 </div>
-              
-              
+               )}
+            {report.aiInsights.targetAudience.painPoints && 
+            report.aiInsights.targetAudience.painPoints.length > 0 && (  
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-2">Key Challenges</h4>
                     <ul className="space-y-1">
-                     
-                        <li   className="text-sm text-gray-700 flex items-start gap-2">
-                          <span className="text-purple-600">•</span>
-                         point
-                        </li>
-                     
+        {report.aiInsights.targetAudience.painPoints.slice(0,3).map((point:string, index:number) => (            
+        <li key={index}   className="text-sm text-gray-700 flex items-start gap-2">
+            <span className="text-purple-600">•</span>
+            {point}
+        </li>
+           ))}            
                     </ul>
                   </div>
-                
+                )}  
             </div>
           </div>
         </div>
-      
+      )}
 
       {/* Competition Analysis */}
        
