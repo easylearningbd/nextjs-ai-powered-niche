@@ -424,94 +424,10 @@ export default function ReportDetailPage() {
           </div>
         </div>
       )}
-
-      {/* Competition Analysis */}
-       
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-              <Zap className="w-5 h-5 text-yellow-600" />
-              Competition & Market Gaps
-            </h2>
-          </div>
-          <div className="px-6 py-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Competition Level</h4>
-                  <span className={`inline-flex items-center px-4 py-1 rounded-full text-base font-medium bg-green-100 text-green-800`}>
-                   competitionLevel
-                  </span>
-                </div>
-            
-
-               
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Market Gaps</h4>
-                    <ul className="space-y-1">
-                      
-                        <li   className="text-sm text-gray-700 flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                         gap
-                        </li>
-                      
-                    </ul>
-                  </div>
-                 
-            </div>
-
-           
-                <div className="mt-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">Differentiation Opportunities</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    
-                      <div   className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <p className="text-sm text-gray-700">opp</p>
-                      </div>
-                   
-                  </div>
-                </div>
-             
-          </div>
-        </div>
-     
-
-      {/* Monetization Strategies */}
-    
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-              <DollarSign className="w-5 h-5 text-green-600" />
-              Monetization Strategies
-            </h2>
-          </div>
-          <div className="px-6 py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              
-                <div   className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-300 transition">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900">type</h4>
-                     
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800`}>
-                       potential
-                      </span>
-                   
-                  </div>
-                 
-                    <div className="text-2xl font-bold text-green-600 mb-2">pricing</div>
-                 
-                 
-                    <p className="text-sm text-gray-700">description</p>
-               
-                </div>
-              
-            </div>
-          </div>
-        </div>
-      
+ 
 
       {/* Business Ideas */}
-      
+    {report.aiInsights?.businessIdeas && report.aiInsights.businessIdeas.length > 0 && (   
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
@@ -524,56 +440,63 @@ export default function ReportDetailPage() {
               Based on the niche analysis, here are specific business ideas you can launch:
             </p>
             <div className="space-y-6">
-             
-                <div
-                  
-                  className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-300 hover:shadow-md transition"
+    {report.aiInsights.businessIdeas.map((idea: any, index: number) => (       
+        <div
+            key={index}
+            className="p-6 border-2 border-gray-200 rounded-lg hover:border-yellow-300 hover:shadow-md transition"
+        >
+            <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{idea.idea}</h3>
+                <p className="text-gray-700 leading-relaxed">{idea.description}</p>
+            </div>
+            <span className={`ml-4 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 ${
+                idea.difficulty === "Easy"
+                ? "bg-green-100 text-green-800"
+                : idea.difficulty === "Medium"
+                ? "bg-yellow-100 text-yellow-800"
+                : "bg-red-100 text-red-800"
+
+            }`}>
+            {idea.difficulty}
+            </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <div className="p-3 bg-blue-50 rounded-lg">
+                <div className="text-xs text-gray-600 mb-1">Time to Launch</div>
+                <div className="font-semibold text-blue-700">{idea.timeToLaunch}</div>
+            </div>
+            <div className="p-3 bg-green-50 rounded-lg">
+                <div className="text-xs text-gray-600 mb-1">Estimated Cost</div>
+                <div className="font-semibold text-green-700">{idea.estimatedCost}</div>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-lg">
+                <div className="text-xs text-gray-600 mb-1">Revenue Model</div>
+                <div className="font-semibold text-purple-700">{idea.revenueModel}</div>
+            </div>
+            <div className="p-3 bg-orange-50 rounded-lg">
+                <div className="text-xs text-gray-600 mb-1">Target Market</div>
+                <div className="font-semibold text-orange-700">{idea.targetMarket}</div>
+            </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">
+                Idea #{index + 1} {idea.difficulty} to implement
+                </span>
+                <button
+                disabled
+                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg cursor-not-allowed"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">idea</h3>
-                      <p className="text-gray-700 leading-relaxed">description</p>
-                    </div>
-                    <span className={`ml-4 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800`}>
-                   difficulty
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-                    <div className="p-3 bg-blue-50 rounded-lg">
-                      <div className="text-xs text-gray-600 mb-1">Time to Launch</div>
-                      <div className="font-semibold text-blue-700">timeToLaunch</div>
-                    </div>
-                    <div className="p-3 bg-green-50 rounded-lg">
-                      <div className="text-xs text-gray-600 mb-1">Estimated Cost</div>
-                      <div className="font-semibold text-green-700">estimatedCost</div>
-                    </div>
-                    <div className="p-3 bg-purple-50 rounded-lg">
-                      <div className="text-xs text-gray-600 mb-1">Revenue Model</div>
-                      <div className="font-semibold text-purple-700">revenueModel</div>
-                    </div>
-                    <div className="p-3 bg-orange-50 rounded-lg">
-                      <div className="text-xs text-gray-600 mb-1">Target Market</div>
-                      <div className="font-semibold text-orange-700">targetMarket</div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">
-                        Idea #  to implement
-                      </span>
-                      <button
-                        disabled
-                        className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg cursor-not-allowed"
-                      >
-                        <Lightbulb className="w-4 h-4 mr-2" />
-                        Save Idea
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              
+                <Lightbulb className="w-4 h-4 mr-2" />
+                Save Idea
+                </button>
+            </div>
+            </div>
+        </div>
+         ))}   
             </div>
 
             {/* Summary Stats */}
@@ -605,7 +528,7 @@ export default function ReportDetailPage() {
             </div>
           </div>
         </div>
-    
+    )} 
 
       {/* Go-to-Market Strategy */}
     
