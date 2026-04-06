@@ -500,126 +500,128 @@ export default function ReportDetailPage() {
             </div>
 
             {/* Summary Stats */}
-            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="w-5 h-5 text-yellow-600" />
-                <h4 className="font-semibold text-gray-900">Quick Overview</h4>
-              </div>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-yellow-600">
-                   length
-                  </div>
-                  <div className="text-xs text-gray-600">Ideas Generated</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-green-600">
-                    length
-                  </div>
-                  <div className="text-xs text-gray-600">Easy to Start</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-blue-600">
-                    length
-                  </div>
-                  <div className="text-xs text-gray-600">Quick Launch</div>
-                </div>
-              </div>
-            </div>
+<div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+    <div className="flex items-center gap-2 mb-2">
+    <Lightbulb className="w-5 h-5 text-yellow-600" />
+    <h4 className="font-semibold text-gray-900">Quick Overview</h4>
+    </div>
+    <div className="grid grid-cols-3 gap-4 text-center">
+    <div>
+        <div className="text-2xl font-bold text-yellow-600">
+        {report.aiInsights.businessIdeas.length}
+        </div>
+        <div className="text-xs text-gray-600">Ideas Generated</div>
+    </div>
+    <div>
+        <div className="text-2xl font-bold text-green-600">
+        {report.aiInsights.businessIdeas.filter((i:any) => i.difficulty === "Easy").length}
+        </div>
+        <div className="text-xs text-gray-600">Easy to Start</div>
+    </div>
+    <div>
+        <div className="text-2xl font-bold text-blue-600">
+        {report.aiInsights.businessIdeas.filter((i:any) => i.timeToLaunch.includes("week")).length}
+        </div>
+        <div className="text-xs text-gray-600">Quick Launch</div>
+    </div>
+    </div>
+</div>
           </div>
         </div>
     )} 
 
       {/* Go-to-Market Strategy */}
-    
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-              <Target className="w-5 h-5 text-blue-600" />
-              Go-to-Market Strategy
-            </h2>
-          </div>
-          <div className="px-6 py-4 space-y-6">
-            <p className="text-gray-600">
-              A phased approach to launching and growing your business in this niche.
-            </p>
+{report.aiInsights.gtmStrategy && (     
+<div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div className="px-6 py-4 border-b border-gray-200">
+    <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+        <Target className="w-5 h-5 text-blue-600" />
+        Go-to-Market Strategy
+    </h2>
+    </div>
+    <div className="px-6 py-4 space-y-6">
+    <p className="text-gray-600">
+        A phased approach to launching and growing your business in this niche.
+    </p>
 
-            {/* Quick Wins */}
-          
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-yellow-600" />
-                    Quick Wins (Start Immediately)
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    
-                      <div   className="flex items-start gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-gray-700">win</span>
-                      </div>
-                    
-                  </div>
-                </div>
-               
-
-            {/* Phase 1 */}
-          
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">
-                    📍 Phase 1: Foundation (Weeks 1-4)
-                  </h4>
-                  <ol className="space-y-2">
-                   
-                      <li  className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                        <span className="flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-sm font-bold rounded-full flex-shrink-0">
-                      index
-                        </span>
-                        <span className="text-gray-700 pt-0.5">step</span>
-                      </li>
-                   
-                  </ol>
-                </div>
-          
-            {/* Phase 2 */}
-           
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">
-                    🚀 Phase 2: Growth (Weeks 5-12)
-                  </h4>
-                  <ol className="space-y-2">
-                     
-                      <li   className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                        <span className="flex items-center justify-center w-6 h-6 bg-green-600 text-white text-sm font-bold rounded-full flex-shrink-0">
-                         index
-                        </span>
-                        <span className="text-gray-700 pt-0.5">step</span>
-                      </li>
-                    
-                  </ol>
-                </div>
-           
-
-            {/* Phase 3 */}
-           
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">
-                    📈 Phase 3: Scale (Month 4+)
-                  </h4>
-                  <ol className="space-y-2">
-                   
-                      <li   className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
-                        <span className="flex items-center justify-center w-6 h-6 bg-purple-600 text-white text-sm font-bold rounded-full flex-shrink-0">
-                          index
-                        </span>
-                        <span className="text-gray-700 pt-0.5">step</span>
-                      </li>
-                    
-                  </ol>
-                </div>
-              
-          </div>
-        </div>
+    {/* Quick Wins */}
+    {report.aiInsights.gtmStrategy.quickWins && 
+    report.aiInsights.gtmStrategy.quickWins.length > 0 && (  
    
+        <div>
+            <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <Zap className="w-5 h-5 text-yellow-600" />
+            Quick Wins (Start Immediately)
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {report.aiInsights.gtmStrategy.quickWins.map((win: string, index:number) => ( 
+                <div key={index}  className="flex items-start gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-700">{win}</span>
+                </div>
+            ))}
+            </div>
+        </div>
+         )}
+
+    {/* Phase 1 */}
+    
+        <div>
+            <h4 className="font-semibold text-gray-900 mb-3">
+            📍 Phase 1: Foundation (Weeks 1-4)
+            </h4>
+            <ol className="space-y-2">
+            
+                <li  className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                <span className="flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-sm font-bold rounded-full flex-shrink-0">
+                index
+                </span>
+                <span className="text-gray-700 pt-0.5">step</span>
+                </li>
+            
+            </ol>
+        </div>
+    
+    {/* Phase 2 */}
+    
+        <div>
+            <h4 className="font-semibold text-gray-900 mb-3">
+            🚀 Phase 2: Growth (Weeks 5-12)
+            </h4>
+            <ol className="space-y-2">
+                
+                <li   className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                <span className="flex items-center justify-center w-6 h-6 bg-green-600 text-white text-sm font-bold rounded-full flex-shrink-0">
+                    index
+                </span>
+                <span className="text-gray-700 pt-0.5">step</span>
+                </li>
+            
+            </ol>
+        </div>
+    
+
+    {/* Phase 3 */}
+    
+        <div>
+            <h4 className="font-semibold text-gray-900 mb-3">
+            📈 Phase 3: Scale (Month 4+)
+            </h4>
+            <ol className="space-y-2">
+            
+                <li   className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+                <span className="flex items-center justify-center w-6 h-6 bg-purple-600 text-white text-sm font-bold rounded-full flex-shrink-0">
+                    index
+                </span>
+                <span className="text-gray-700 pt-0.5">step</span>
+                </li>
+            
+            </ol>
+        </div>
+        
+    </div>
+</div>
+   )}
 
       {/* Bottom Actions */}
       <div className="flex items-center justify-between py-6 border-t border-gray-200">
