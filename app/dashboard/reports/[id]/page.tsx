@@ -565,60 +565,66 @@ export default function ReportDetailPage() {
          )}
 
     {/* Phase 1 */}
-    
+    {report.aiInsights.gtmStrategy.phase1 && 
+    report.aiInsights.gtmStrategy.phase1.length > 0  && (  
+   
         <div>
             <h4 className="font-semibold text-gray-900 mb-3">
             📍 Phase 1: Foundation (Weeks 1-4)
             </h4>
             <ol className="space-y-2">
-            
-                <li  className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+            {report.aiInsights.gtmStrategy.phase1.map((step: string, index: number) => (  
+           
+                <li key={index} className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
                 <span className="flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-sm font-bold rounded-full flex-shrink-0">
-                index
+                {index + 1}
                 </span>
-                <span className="text-gray-700 pt-0.5">step</span>
+                <span className="text-gray-700 pt-0.5">{step}</span>
                 </li>
-            
+             ))}
             </ol>
         </div>
-    
+     )}
     {/* Phase 2 */}
     
+     {report.aiInsights.gtmStrategy.phase2 && 
+    report.aiInsights.gtmStrategy.phase2.length > 0  && (  
         <div>
             <h4 className="font-semibold text-gray-900 mb-3">
             🚀 Phase 2: Growth (Weeks 5-12)
             </h4>
             <ol className="space-y-2">
-                
-                <li   className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+             {report.aiInsights.gtmStrategy.phase2.map((step: string, index: number) => (  
+                <li key={index}  className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
                 <span className="flex items-center justify-center w-6 h-6 bg-green-600 text-white text-sm font-bold rounded-full flex-shrink-0">
-                    index
+                    {index + 1}
                 </span>
-                <span className="text-gray-700 pt-0.5">step</span>
+                <span className="text-gray-700 pt-0.5">{step}</span>
                 </li>
-            
+              ))}
             </ol>
         </div>
-    
+     )}
 
     {/* Phase 3 */}
-    
+     {report.aiInsights.gtmStrategy.phase3 && 
+    report.aiInsights.gtmStrategy.phase3.length > 0  && (  
         <div>
             <h4 className="font-semibold text-gray-900 mb-3">
             📈 Phase 3: Scale (Month 4+)
             </h4>
             <ol className="space-y-2">
-            
-                <li   className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+             {report.aiInsights.gtmStrategy.phase3.map((step: string, index: number) => (  
+                <li key={index}  className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
                 <span className="flex items-center justify-center w-6 h-6 bg-purple-600 text-white text-sm font-bold rounded-full flex-shrink-0">
-                    index
+                    {index + 1}
                 </span>
-                <span className="text-gray-700 pt-0.5">step</span>
+                <span className="text-gray-700 pt-0.5">{step}</span>
                 </li>
-            
+             ))}
             </ol>
         </div>
-        
+        )}
     </div>
 </div>
    )}
