@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { ArrowLeft, TrendingUp, Users, DollarSign, Target, Lightbulb, Download, AlertCircle, Share2, BarChart3, Globe, Zap, CheckCircle} from "lucide-react";
 import Link from "next/link";
+import { exportReportToPDF } from "@/lib/utils/exportPDF";
 
 interface Report {
     id: string;
@@ -44,6 +45,16 @@ export default function ReportDetailPage() {
         }finally{
             setIsLoading(false);
         }
+    }
+
+    const handleExportPDF = () => {
+        if (!report) return;
+        try {
+            exportReportToPDF(report);
+        } catch (error) {
+            console.error("Error exporting pdf:", error);
+        }
+
     }
 
    const getViabilityColor = (rating: string) => {
@@ -107,7 +118,7 @@ export default function ReportDetailPage() {
         </Link>
         <div className="flex gap-2">
           <button
-           
+            onClick={handleExportPDF}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
           >
             <Download className="w-4 h-4 mr-2" />
