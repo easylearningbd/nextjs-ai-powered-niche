@@ -33,6 +33,11 @@ export default function SettingsPage(){
         setIsEditingProfile(true);
     }
 
+    const cancelEditingProfile = () => {
+        setIsEditingProfile(false);
+        setProfileName("");
+    }
+
 
 return (
      <>
@@ -99,7 +104,7 @@ return (
         </div>
         <div>
             <label className="text-sm font-medium text-gray-700">Email (cannot be changed)</label>
-            <p className="text-gray-500 mt-1">email</p>
+            <p className="text-gray-500 mt-1">{session?.user?.email}</p>
         </div>
         <div className="flex gap-2">
             <button
@@ -111,7 +116,7 @@ return (
             </button>
             <button
             type="button"
-            
+            onClick={cancelEditingProfile}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
             Cancel
