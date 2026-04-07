@@ -46,9 +46,9 @@ export default function SettingsPage(){
             const response = await axios.put("/api/user/profile", { name: profileName });
             // Fetch fresh name directly form database 
             const fresh = await axios.get("/api/user/profile");
-            setDisplayName(fresh.data.user.name || profileName);
+            setProfileName(fresh.data.user.name || profileName);
             await update();
-            toast.success("Profile updated successfully");
+            toast.success(response.data.message);
             setIsEditingProfile(false);
         } catch (error) {
             console.error("Profile updated error", error);
