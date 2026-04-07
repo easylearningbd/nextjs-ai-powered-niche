@@ -16,6 +16,23 @@ export default function SettingsPage(){
     const [displayName, setDisplayName] = useState("");
     const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
 
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await axios.get("/api/user/profile");
+                setProfileName(response.data.user.name || "");
+            } catch (error) {
+                setDisplayName(session?.user?.name || "");
+            }
+        };
+        fetchProfile();
+    },[]);
+
+    const startEditingProfile = () => {
+        setProfileName(session?.user?.name || "");
+        setIsEditingProfile(true);
+    }
+
 
 return (
      <>
@@ -37,32 +54,33 @@ return (
     <p className="text-sm text-gray-500 mt-0.5">Your account details and information</p>
     </div>
     <div className="px-6 py-4 space-y-4">
-    
+    {!isEditingProfile ? ( 
         <>
         <div>
             <label className="text-sm font-medium text-gray-700">Name</label>
-            <p className="text-gray-900 mt-1">name</p>
+            <p className="text-gray-900 mt-1">
+                {profileName || session?.user?.name}</p>
         </div>
         <div>
             <label className="text-sm font-medium text-gray-700">Email</label>
-            <p className="text-gray-900 mt-1">email</p>
+            <p className="text-gray-900 mt-1">{session?.user?.email}</p>
         </div>
         <div>
             <label className="text-sm font-medium text-gray-700">Role</label>
             <div className="mt-1">
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                USER
+                {(session?.user as any)?.role || "USER"}
             </span>
             </div>
         </div>
         <button
-            
+            onClick={startEditingProfile}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
         >
             Edit Profile
         </button>
         </>
-        
+        ) : ( 
         <form   className="space-y-4">
         <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -71,7 +89,7 @@ return (
             <input
             type="text"
             id="name"
-            value="profileName"
+            value={profileName}
             
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
@@ -100,7 +118,7 @@ return (
             </button>
         </div>
         </form>
-        
+        )}
     </div>
 </div>
 
