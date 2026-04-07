@@ -16,6 +16,12 @@ export default function SettingsPage(){
     const [displayName, setDisplayName] = useState("");
     const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
 
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -36,6 +42,14 @@ export default function SettingsPage(){
     const cancelEditingProfile = () => {
         setIsEditingProfile(false);
         setProfileName("");
+    }
+
+    const cancelChangingPassword = () => {
+        setIsChangingPassword(false);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+
     }
 
     const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -396,20 +410,20 @@ Upgrade via Bank Transfer
     <p className="text-sm text-gray-500 mt-0.5">Manage your password and security settings</p>
     </div>
     <div className="px-6 py-4 space-y-4">
-    
+    {!isChangingPassword ? (  
         <>
         <div>
             <label className="text-sm font-medium text-gray-700">Password</label>
             <p className="text-sm text-gray-600 mt-1">••••••••</p>
         </div>
         <button
-            
+            onClick={() => setIsChangingPassword(true)}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
         >
             Change Password
         </button>
         </>
-    
+    ) : ( 
         <form   className="space-y-4">
         <div>
             <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">
@@ -418,8 +432,8 @@ Upgrade via Bank Transfer
             <input
             type="password"
             id="currentPassword"
-            value="currentPassword"
-            
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
             />
@@ -431,8 +445,8 @@ Upgrade via Bank Transfer
             <input
             type="password"
             id="newPassword"
-            value="newPassword"
-            
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
             minLength={6}
@@ -446,8 +460,8 @@ Upgrade via Bank Transfer
             <input
             type="password"
             id="confirmPassword"
-            value="confirmPassword"
-            
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
             minLength={6}
@@ -456,21 +470,22 @@ Upgrade via Bank Transfer
         <div className="flex gap-2">
             <button
             type="submit"
-            
+            disabled={isUpdatingPassword}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-            Change Password
+            {isUpdatingPassword ? "Changing..." : "Change Password"} 
             </button>
             <button
             type="button"
-            
+            onClick={cancelChangingPassword}
+            disabled={isUpdatingPassword}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
             Cancel
             </button>
         </div>
         </form>
-    
+    )}
     </div>
 </div>
 
