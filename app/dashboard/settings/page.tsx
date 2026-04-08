@@ -126,8 +126,36 @@ export default function SettingsPage(){
 
 
     const handleBankTransferSubmit = async (e: React.FormEvent) => {
-        
+        e.preventDefault();
+        if (!invoiceFile) {
+            toast.error("Please upload payment proof/invoice");
+            return;
+        }
+    if (!transactionId || transactionId.trim().length < 5) {
+        toast.error("Please enter a vaid transaction id (min 5 characters)");
+        return;
     }
+    setIsSubmittingPayment(true);
+
+    try {
+        const formData = new FormData();
+        formData.append("invoice", invoiceFile);
+        formData.append("transactionId", transactionId);
+        const response = await axios.post("/api/subscription/bank-transfer", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast.success(response.data.message);
+        setShowBankTransfer(false);
+        setTransactionId("");
+        setInvoiceFile(null);
+    } catch (error) {
+        console.log("Bank Transfer error:", error);
+
+    }finally {
+        setIsSubmittingPayment(false);
+    }
+
+ }
 
 
 return (
