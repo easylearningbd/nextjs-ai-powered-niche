@@ -34,6 +34,29 @@ export default function SettingsPage(){
         fetchProfile();
     },[]);
 
+
+    const handleChangePassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsUpdatingPassword(true);
+
+        try {
+            const response = await axios.put("/api/user/password", {
+                currentPassword,
+                newPassword,
+                confirmPassword,
+            });
+            toast.success(response.data.message);
+            setIsChangingPassword(false);
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+        } catch (error) {
+            console.error("Password change error", error);
+        } finally {
+            setIsUpdatingPassword(false);
+        }
+    };
+
     const startEditingProfile = () => {
         setProfileName(session?.user?.name || "");
         setIsEditingProfile(true);
@@ -424,7 +447,7 @@ Upgrade via Bank Transfer
         </button>
         </>
     ) : ( 
-        <form   className="space-y-4">
+        <form onSubmit={handleChangePassword}  className="space-y-4">
         <div>
             <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">
             Current Password
