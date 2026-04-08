@@ -22,6 +22,16 @@ export default function SettingsPage(){
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
+
+    const [showBankTransfer, setShowBankTransfer] = useState(false);
+    const [transactionId, setTransactionId] = useState("");
+    const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+    const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
+    const [paymentRequests, setPaymentRequests] = useState<any[]>([]);
+
+    const subscription = (session?.user as any)?.subscription;
+    const isPro = subscription?.PlanType === "PRO" && subscription?.isActive;
+
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -198,17 +208,21 @@ return (
     <div>
         <label className="text-sm font-medium text-gray-700">Current Plan</label>
         <div className="flex items-center gap-2 mt-1">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800`}>
-        FREE
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isPro 
+        ? "bg-blue-100 text-blue-800"
+        : "bg-gray-100 text-gray-600"  
+    } `}>
+
+        {isPro ? "PRO" : "FREE"}  
         </span>
         <span className="text-sm text-gray-600">
-        Unlimited validations
+         {isPro ? "Unlimited validations" : "3 Validations per month"}   
         </span>
         </div>
     </div>
 
     {/* Pending Payment Notice */}
-    
+    {!isPro && paymentRequests.some(r => r.status === "PENDING") && ( 
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
         <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-2">
@@ -228,10 +242,10 @@ return (
             </button>
         </div>
         </div>
-          
+        )}
 
             {/* Approved Payment Notice */}
-            
+ {!isPro && paymentRequests.some(r => r.status === "APPROVED") && (           
 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
 <div className="flex items-start justify-between gap-2">
     <div className="flex items-start gap-2">
@@ -251,7 +265,7 @@ return (
     </button>
 </div>
 </div>
-
+)} 
 
 
 <>
