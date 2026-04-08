@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -103,6 +103,10 @@ export default function SettingsPage(){
             setIsUpdatingProfile(false);
         }
 
+    }
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        
     }
 
 
@@ -267,14 +271,14 @@ return (
 </div>
 )} 
 
-
+{isPro ? ( 
 <>
-
+    {subscription?.endDate && ( 
     <p className="text-sm text-gray-600">
     Your Pro plan is active until{" "}
-    endDate
+    {new Date(subscription.endDate).toLocaleDateString()}
     </p>
-
+)}
 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
     <h4 className="font-semibold text-blue-900 mb-2">Pro Plan Benefits</h4>
     <ul className="text-sm text-blue-800 space-y-1">
@@ -292,7 +296,7 @@ return (
     Downgrade to Free
 </button>
 </>
-
+) : ( 
 <>
 <p className="text-sm text-gray-600">
     Upgrade to Pro for unlimited validations, deep analysis, and export features
@@ -312,14 +316,14 @@ return (
 </div>
 
 <button
-    
+   onClick={() => setShowBankTransfer(!showBankTransfer)} 
     className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all"
 >
-Upgrade via Bank Transfer
+ {showBankTransfer ? "Hide Payment Form" : "Upgrade via Bank Transfer"} 
 </button>
 
 {/* Bank Transfer Form */}
-
+ {showBankTransfer && ( 
     <div className="border border-gray-300 rounded-lg p-4 space-y-4 bg-white">
     <div>
         <h4 className="font-semibold text-gray-900 mb-2">Bank Transfer Details</h4>
@@ -339,8 +343,8 @@ Upgrade via Bank Transfer
         <input
             type="text"
             id="transactionId"
-            value="transactionId"
-            
+            value={transactionId}
+            onChange={(e) => setTransactionId(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter your transaction ID"
             required
@@ -355,12 +359,12 @@ Upgrade via Bank Transfer
         <div className="flex items-center gap-2">
             <label className="flex-1 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
             <Upload className="w-4 h-4 mr-2" />
-            Choose file
+            {invoiceFile ? invoiceFile.name : "Choose file"} 
             <input
                 type="file"
                 id="invoice"
                 accept="image/jpeg,image/jpg,image/png,application/pdf"
-                
+                onChange={handleFileChange}
                 className="hidden"
                 required
             />
@@ -372,14 +376,18 @@ Upgrade via Bank Transfer
         <div className="flex gap-2">
         <button
             type="submit"
-            
+            disabled={isSubmittingPayment}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-            Submit Payment Request
+          {isSubmittingPayment ? "Submitting..." : "Submit Payment Request"}  
         </button>
         <button
             type="button"
-            
+            onClick={(() => {
+                setShowBankTransfer(false);
+                setTransactionId("");
+                setInvoiceFile(null);
+            })}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
         >
             Cancel
@@ -387,7 +395,7 @@ Upgrade via Bank Transfer
         </div>
     </form>
     </div>
-
+)}
 
 {/* Payment Requests History */}
 
@@ -433,7 +441,7 @@ Upgrade via Bank Transfer
     </div>
 
 </>
-
+)}
 </div>
 </div>
 
