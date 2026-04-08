@@ -106,6 +106,26 @@ export default function SettingsPage(){
     }
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const allowedTypes = ["image/jpeg","image/jpg","image/png","image/webp", "application/pdf"];
+            const fileExtension = file.name.toLowerCase().split(".").pop();
+            const allowedExtensions = ["jpeg","jpg","png","webp","pdf"];
+            if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension || "")) {
+                toast.error("Only JPG, PNG, PDF files are allowed");
+                return;
+            }
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                toast.error("File size must be less then 5MB");
+                return;
+            }
+            setInvoiceFile(file);
+        }
+    };
+
+
+    const handleBankTransferSubmit = async (e: React.FormEvent) => {
         
     }
 
@@ -335,7 +355,7 @@ return (
         </div>
     </div>
 
-    <form className="space-y-4">
+    <form onSubmit={handleBankTransferSubmit} className="space-y-4">
         <div>
         <label htmlFor="transactionId" className="block text-sm font-medium text-gray-700 mb-1">
             Transaction ID / Reference Number
