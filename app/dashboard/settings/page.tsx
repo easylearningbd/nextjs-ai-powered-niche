@@ -177,6 +177,17 @@ export default function SettingsPage(){
 
 
  const handleRefreshStatus = async () => {
+    setIsRefreshingStatus(true);
+    try {
+        await update();
+        await fetchPaymentRequests();
+        toast.success("Status refreshed successfully");
+        router.refresh();
+    } catch (error) {
+        console.error("Refresh error", error);
+    }finally {
+        setIsRefreshingStatus(false);
+    }
 
  }
 
