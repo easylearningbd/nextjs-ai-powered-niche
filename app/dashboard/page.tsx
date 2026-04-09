@@ -23,6 +23,13 @@ interface UsageData {
   isPro: boolean;
 }
 
+interface PaymentRequest {
+  id: string;
+  status: string;
+  transactionId: string;
+  createdAt: string;
+}
+
 export default function DashboardPage(){
 
     const router = useRouter();
@@ -36,10 +43,23 @@ export default function DashboardPage(){
     const [usage, setUsage] = useState<UsageData | null>(null);
     const [isLoadingReports, setIsLoadingReports] = useState(true);
 
+    const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
+
     useEffect(() => {
       fetchReports();
       fetchUsage();
+      fetchPaymentRequests();
     },[]);
+
+    const fetchPaymentRequests = async () => {
+        try {
+            const response = await axios.get("/api/subscription/bank-transfer");
+            setPaymentRequests(response.data.paymentRequests || []);
+           // console.log("payment",response.data.paymentRequests);
+        } catch (error) {
+            console.error("Fetch payment requests error", error);
+        }
+    }
     
     const fetchReports = async () => {
       try {
@@ -161,7 +181,7 @@ export default function DashboardPage(){
       </div>
 
       {/* Pending Payment Notice */}
-      
+      {!usage?.isPro && paymentRequests.some(r => r.status === "PENDING") && ( 
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg">
           <div className="px-6 py-4">
             <div className="flex items-start gap-3">
@@ -178,7 +198,7 @@ export default function DashboardPage(){
             </div>
           </div>
         </div>
-      
+      )}
 
       {/* Subscription Status Card */}
 {usage && ( 
