@@ -31,6 +31,22 @@ export default function SettingsPage(){
 
     const subscription = (session?.user as any)?.subscription;
     const isPro = subscription?.PlanType === "PRO" && subscription?.isActive;
+    
+    useEffect(() => {
+        fetchPaymentRequests();
+    },[]);
+
+    const fetchPaymentRequests = async () => {
+        try {
+            const response = await axios.get("/api/subscription/bank-transfer");
+            setPaymentRequests(response.data.paymentRequests);
+           // console.log("payment",response.data.paymentRequests);
+        } catch (error) {
+            console.error("Fetch payment requests error", error);
+        }
+    }
+
+
 
     useEffect(() => {
         const fetchProfile = async () => {

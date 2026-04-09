@@ -95,3 +95,32 @@ try {
     console.error("Bank transfer error");
 }
 }
+
+
+export async function GET(req: NextRequest) {
+    try {
+
+        const session = await auth();
+        if (!session?.user) {
+            return NextResponse.json({ error: "Unauthorized"}, { status: 401 });
+        }
+
+        const userId = (session.user as any).id;
+
+    const paymentRequests = await prisma.paymentRequest.findMany({
+        where: {userId},
+        orderBy: {createdAt: "desc"},
+        select: {
+            id: true,
+            transactionId: true,
+            status: true,
+            approvedAt: true,
+            rejectedReason: true,
+            createdAt: true,
+        },
+    });
+       return NextResponse.json({ paymentRequests }) 
+    } catch (error) {
+        console.error("Get payment requeses error", error);
+    }
+}
