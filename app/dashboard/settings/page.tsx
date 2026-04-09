@@ -29,6 +29,8 @@ export default function SettingsPage(){
     const [isSubmittingPayment, setIsSubmittingPayment] = useState(false);
     const [paymentRequests, setPaymentRequests] = useState<any[]>([]);
 
+    const [isRefreshingStatus, setIsRefreshingStatus] = useState(false);
+
     const subscription = (session?.user as any)?.subscription;
     const isPro = subscription?.PlanType === "PRO" && subscription?.isActive;
     
@@ -174,6 +176,11 @@ export default function SettingsPage(){
  }
 
 
+ const handleRefreshStatus = async () => {
+
+ }
+
+
 return (
      <>
 <Toaster position="top-right" />
@@ -303,10 +310,11 @@ return (
             </div>
             </div>
             <button
-            
+            onClick={handleRefreshStatus}
+            disabled={isRefreshingStatus}
             className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-            Refresh Status
+            {isRefreshingStatus ? "Refreshing..." : "Refresh Status"} 
             </button>
         </div>
         </div>
@@ -326,10 +334,11 @@ return (
     </div>
     </div>
     <button
-    
+    onClick={handleRefreshStatus}
+    disabled={isRefreshingStatus}
     className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
-    Refresh Status
+    {isRefreshingStatus ? "Refreshing..." : "Refresh Status"} 
     </button>
 </div>
 </div>
@@ -462,48 +471,48 @@ return (
 )}
 
 {/* Payment Requests History */}
-
+{paymentRequests.length > 0 && ( 
     <div className="border-t border-gray-200 pt-4">
     <h4 className="font-semibold text-gray-900 mb-3">Payment Requests</h4>
     <div className="space-y-2">
-        
+       {paymentRequests.map((request) => (  
         <div
-            
+            key={request.id}
             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
         >
             <div className="flex-1">
             <p className="text-sm font-medium text-gray-900">
-                Transaction:  
+                Transaction: {request.transactionId} 
             </p>
             <p className="text-xs text-gray-500">
-                createdAt
+                {new Date(request.createdAt).toLocaleDateString()}
             </p>
             </div>
             <div className="flex items-center gap-2">
-            
+            {request.status  === "PENDING" && ( 
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                 <Clock className="w-3 h-3" />
                 Pending
                 </span>
-            
-            
+            )}
+            {request.status  === "APPROVED" && ( 
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white">
                 <CheckCircle className="w-3 h-3" />
                 Approved
                 </span>
-            
-            
+             )}
+             {request.status  === "REJECTED" && ( 
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                 <XCircle className="w-3 h-3" />
                 Rejected
                 </span>
-            
+            )}
             </div>
         </div>
-        
+        ))}
     </div>
     </div>
-
+)}
 </>
 )}
 </div>
