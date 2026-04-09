@@ -73,14 +73,25 @@ try {
   await writeFile(filePath, buffer);
 
   // Store payment request to in database 
-  
 
- 
+  const paymentRequest = await prisma.paymentRequest.create({
+    data: {
+        userId,
+        transactionId: transactionId.trim(),
+        invoicePath: `/uploads/invoices/${fileName}`,
+        status: "PENDING",
+    },
+  });
 
-
+  return NextResponse.json({
+    message:"Payment request submitted succesffuly. Awaiting admin approval",
+    paymentRequest: {
+        id: paymentRequest.id,
+        status: paymentRequest.status,
+        createdAt: paymentRequest.createdAt,
+    },
+  });
 } catch (error) {
-    
+    console.error("Bank transfer error");
 }
-
-
 }
