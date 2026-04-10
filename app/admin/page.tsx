@@ -21,6 +21,7 @@ interface Analytics {
   newUsersThisMonth: number;
   recentReports: number;
   averageScore: number;
+  totalMRR: number;
 }
 
 export default function AdminDashboardPage(){
@@ -139,7 +140,7 @@ export default function AdminDashboardPage(){
             <DollarSign className="h-4 w-4 text-green-600" />
           </div>
           <div className="px-6 pb-4">
-            <div className="text-2xl font-bold">$4</div>
+            <div className="text-2xl font-bold">${analytics.totalMRR}</div>
             <p className="text-xs text-gray-500 mt-1">Monthly recurring revenue</p>
           </div>
         </div>

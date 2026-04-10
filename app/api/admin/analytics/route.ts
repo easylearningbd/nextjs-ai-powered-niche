@@ -97,6 +97,19 @@ const planBreakdown = {
         },
     });
 
+    // Get total MRR from approved payment requests
+const approvedPayments = await prisma.paymentRequest.findMany({
+    where: { status: "APPROVED" },
+    select: { payment: true },
+});
+
+const totalMRR = approvedPayments.reduce((sum, p) => {
+    const amount = parseFloat((p.payment || "$0").replace("$", ""));
+    return sum + (isNaN(amount) ? 0 : amount);
+}, 0);
+
+
+
     return NextResponse.json({
         totalUsers,
         planBreakdown,
@@ -108,6 +121,7 @@ const planBreakdown = {
         averageScore: avgScore._avg.overallScore
             ? Math.round(avgScore._avg.overallScore)
             : 0,
+        totalMRR, 
 
     });
     } catch (error) {
