@@ -48,15 +48,70 @@ const planBreakdown = {
     };
 
     /// Get current month usage
-    
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+
+    const monthlyUsage = await prisma.usageLog.aggregate({
+        where: {
+            month: currentMonth,
+            year: currentYear,
+        },
+        _sum: {
+            validationCount: true,
+        },
+    });
+
+    // Get new user this month
+    const firstDateOfMonth = new Date(currentYear, currentMonth - 1, 1);
+    const newUsersThisMonth = await prisma.user.count({
+        where: {
+            createdAt: {
+                gte: firstDateOfMonth,
+            },
+        },
+    });
+
+    // Get Recent activity fro last 7 days 
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const recentReports = await prisma.report.count({
+        where: {
+            createdAt: {
+                gte: sevenDaysAgo,
+            },
+        },
+    });
 
 
+    /// Get average score of completed reports 
+    const avgScore = await prisma.report.aggregate({
+        where: {
+            status: ReportStatus.COMPLETED,
+            overallScore: {
+                not: null,
+            },
+        },
+        _avg: {
+            overallScore: true,
+        },
+    });
 
+    return NextResponse.json({
+        totalUsers,
+        planBreakdown,
+        totalReports,
+        reportsBreakdown,
+        monthlyValidations: monthlyUsage._sum.validationCount || 0,
+        newUsersThisMonth,
+        recentReports,
+        averageScore: avgScore._avg.overallScore
+            ? Math.round(avgScore._avg.overallScore)
+            : 0,
 
+    });
     } catch (error) {
-        
+        console.error("Admin analytics api error", error);''
     }
-
-
 
 }
