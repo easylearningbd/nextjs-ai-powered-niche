@@ -4,9 +4,28 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { Users, FileText, TrendingUp, DollarSign, Activity, CheckCircle } from "lucide-react";
 
+interface Analytics {
+  totalUsers: number;
+  planBreakdown: {
+    FREE: number;
+    PRO: number;
+  };
+  totalReports: number;
+  reportsBreakdown: {
+    COMPLETED: number;
+    PROCESSING: number;
+    PENDING: number;
+    FAILED: number;
+  };
+  monthlyValidations: number;
+  newUsersThisMonth: number;
+  recentReports: number;
+  averageScore: number;
+}
+
 export default function AdminDashboardPage(){
 
-  const [analytics, setAnalytics] = useState(null);
+  const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +36,7 @@ export default function AdminDashboardPage(){
     try {
       const response = await axios.get("/api/admin/analytics");
       setAnalytics(response.data);
+      //console.log("total data",response.data);
 
     } catch (error) {
       console.error("Error fetching analytics", error);
@@ -24,6 +44,44 @@ export default function AdminDashboardPage(){
       setIsLoading(false);
     }
   }
+
+
+   if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div className="py-6 px-6">
+                <div className="animate-pulse space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+    if (!analytics) {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div className="py-12 px-6 text-center">
+            <p className="text-gray-600">Failed to load analytics</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
 
 
     return (
