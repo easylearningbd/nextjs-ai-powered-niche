@@ -5,6 +5,27 @@ import axios from "axios";
 import { Users, FileText, TrendingUp, DollarSign, Activity, CheckCircle } from "lucide-react";
 
 export default function AdminDashboardPage(){
+
+  const [analytics, setAnalytics] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAnalytics();
+  },[]);
+
+  const fetchAnalytics = async () => {
+    try {
+      const response = await axios.get("/api/admin/analytics");
+      setAnalytics(response.data);
+
+    } catch (error) {
+      console.error("Error fetching analytics", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+
     return (
          <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
