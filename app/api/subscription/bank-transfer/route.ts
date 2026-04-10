@@ -80,6 +80,8 @@ try {
         transactionId: transactionId.trim(),
         invoicePath: `/uploads/invoices/${fileName}`,
         status: "PENDING",
+        payment: "$29",
+
     },
   });
 

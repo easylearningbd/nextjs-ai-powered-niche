@@ -172,6 +172,7 @@ model PaymentRequest {
   invoicePath     String        @db.VarChar(500)
   status          PaymentStatus @default(PENDING)
   rejectedReason  String?       @db.Text
+  payment         String?
   approvedAt      DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
