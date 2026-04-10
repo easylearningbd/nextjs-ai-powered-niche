@@ -100,9 +100,9 @@ export default function AdminDashboardPage(){
             <Users className="h-4 w-4 text-blue-600" />
           </div>
           <div className="px-6 pb-4">
-            <div className="text-2xl font-bold">totalUsers</div>
+            <div className="text-2xl font-bold">{analytics.totalUsers}</div>
             <p className="text-xs text-gray-500 mt-1">
-              +newUsersThisMonth this month
+              +{analytics.newUsersThisMonth} this month
             </p>
           </div>
         </div>
@@ -113,9 +113,9 @@ export default function AdminDashboardPage(){
             <FileText className="h-4 w-4 text-green-600" />
           </div>
           <div className="px-6 pb-4">
-            <div className="text-2xl font-bold">totalReports</div>
+            <div className="text-2xl font-bold">{analytics.totalReports}</div>
             <p className="text-xs text-gray-500 mt-1">
-              recentReportsin last 7 days
+              {analytics.recentReports} last 7 days
             </p>
           </div>
         </div>
@@ -126,9 +126,9 @@ export default function AdminDashboardPage(){
             <TrendingUp className="h-4 w-4 text-purple-600" />
           </div>
           <div className="px-6 pb-4">
-            <div className="text-2xl font-bold">PRO</div>
+            <div className="text-2xl font-bold">{analytics.planBreakdown.PRO}</div>
             <p className="text-xs text-gray-500 mt-1">
-              FREE free users
+              {analytics.planBreakdown.FREE} free users
             </p>
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function AdminDashboardPage(){
                   <span className="text-sm font-medium">Completed</span>
                 </div>
                 <div className="text-2xl font-bold text-green-600">
-                 COMPLETED
+                 {analytics.reportsBreakdown.COMPLETED}
                 </div>
               </div>
               <div className="flex items-center justify-between">
@@ -169,7 +169,7 @@ export default function AdminDashboardPage(){
                   <span className="text-sm font-medium">Processing</span>
                 </div>
                 <div className="text-2xl font-bold text-blue-600">
-                 PROCESSING
+                 {analytics.reportsBreakdown.PROCESSING}
                 </div>
               </div>
               <div className="flex items-center justify-between">
@@ -178,7 +178,7 @@ export default function AdminDashboardPage(){
                   <span className="text-sm font-medium">Pending</span>
                 </div>
                 <div className="text-2xl font-bold text-yellow-600">
-                 PENDING
+                 {analytics.reportsBreakdown.PENDING}
                 </div>
               </div>
               <div className="flex items-center justify-between">
@@ -187,7 +187,7 @@ export default function AdminDashboardPage(){
                   <span className="text-sm font-medium">Failed</span>
                 </div>
                 <div className="text-2xl font-bold text-red-600">
-                FAILED
+                {analytics.reportsBreakdown.FAILED}
                 </div>
               </div>
             </div>
@@ -204,12 +204,12 @@ export default function AdminDashboardPage(){
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-600">Monthly Validations</span>
-                  <span className="text-lg font-bold">monthlyValidations</span>
+                  <span className="text-lg font-bold">{analytics.monthlyValidations}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
                     className="bg-blue-600 h-2 rounded-full"
-                    
+              style={{ width: `${Math.min((analytics.monthlyValidations / 100) * 100, 100)}%` }}                    
                   />
                 </div>
               </div>
@@ -217,12 +217,12 @@ export default function AdminDashboardPage(){
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-600">Average Report Score</span>
-                  <span className="text-lg font-bold">10/100</span>
+                  <span className="text-lg font-bold">{analytics.averageScore}/100</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
                     className="bg-green-600 h-2 rounded-full"
-                    
+                  style={{ width: `${analytics.averageScore}%` }}
                   />
                 </div>
               </div>
@@ -231,14 +231,19 @@ export default function AdminDashboardPage(){
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-600">Pro Conversion Rate</span>
                   <span className="text-lg font-bold">
-                  4
+                  {analytics.totalUsers > 0 
+                  ? Math.round((analytics.planBreakdown.PRO / analytics.totalUsers) * 100)
+                  : 0 }
                     %
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
                     className="bg-purple-600 h-2 rounded-full"
-                    
+              style={{ width: `${analytics.totalUsers > 0 
+                ? (analytics.planBreakdown.PRO / analytics.totalUsers) * 100
+                : 0
+              }%` }}     
                   />
                 </div>
               </div>
@@ -246,7 +251,11 @@ export default function AdminDashboardPage(){
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-600">
                   <span className="font-semibold">Success Rate:</span>{" "}
-                  
+                  {analytics.totalReports > 0 
+                  ? Math.round(
+                    (analytics.reportsBreakdown.COMPLETED / analytics.totalReports) * 100
+                  )
+                  : 0 }
                   % of reports completed successfully
                 </p>
               </div>
