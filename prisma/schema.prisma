@@ -12,7 +12,7 @@ enum Role {
   USER
   ADMIN
 }
-
+ 
 enum PlanType {
   FREE
   PRO
