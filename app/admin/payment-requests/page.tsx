@@ -56,6 +56,31 @@ export default function AdminPaymentRequestPage(){
   };
 
 
+  const handleReject = async (id: string) => {
+
+    if (!rejectReason.trim()) {
+        toast.error("Please provide a reason for rejection");
+    }
+
+    setProcessingId(id);
+
+    try {
+        const response = await axios.patch(`/api/admin/payment-requests/${id}`, {
+            action: "reject",
+            rejectReason: rejectReason,
+        });
+        toast.success(response.data.message);
+        setShowRejectModal(null);
+        setRejectReason("");
+        fetchPaymentRequests();
+    } catch (error) {
+        console.error("Reject error", error);
+    } finally {
+        setProcessingId(null);
+    }
+  }
+
+
   if (loading) {
     return (
         <div className="min-h-screen flex items-center justify-center">
@@ -183,8 +208,8 @@ export default function AdminPaymentRequestPage(){
             {processingId === request.id ? "Processing..." : "Approve & Upgrade to Pro"} 
             </button>
             <button
-            
-            
+            onClick={() => setShowRejectModal(request.id)}
+            disabled={processingId === request.id}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
             <XCircle className="w-4 h-4 mr-2" />
@@ -199,38 +224,41 @@ export default function AdminPaymentRequestPage(){
         </div>
 
         {/* Reject Modal */}
-    
-          {/* <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        {showRejectModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Reject Payment Request
               </h3>
               <textarea
-                value="rejectReason"
-               
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
                 placeholder="Enter reason for rejection..."
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 min-h-[100px]"
                 required
               />
               <div className="flex gap-2 mt-4">
                 <button
-                  
-                 
+                  onClick={() => handleReject(showRejectModal)}
+                  disabled={processingId === showRejectModal}
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                 Confirm Reject
                 </button>
                 <button
-                   
-                  
+                 onClick={() => {
+                    setShowRejectModal(null);
+                    setRejectReason("");
+                 }}  
+                  disabled={processingId === showRejectModal}
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Cancel
                 </button>
               </div>
             </div>
-          </div> */}
-        
+          </div>
+         )}
       </div>
     </>
     )
