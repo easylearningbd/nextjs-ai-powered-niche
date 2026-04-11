@@ -12,7 +12,27 @@ export default function AdminPaymentRequestPage(){
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
   const [showRejectModal, setShowRejectModal] = useState<string | null>(null);
-  
+
+
+  useEffect(() => {
+    fetchPaymentRequests();
+  },[]);
+ 
+
+  const fetchPaymentRequests = async () => {
+    try {
+        setLoading(true);
+        const response = await axios.get("/api/admin/payment-requests");
+        setPaymentRequests(response.data.paymentRequests);
+        console.log("Request", response.data.paymentRequests);
+        
+    } catch (error) {
+        console.error("Fetch payment requests error", error);
+    } finally {
+        setLoading(false);
+    }
+  }
+
 
 
 
