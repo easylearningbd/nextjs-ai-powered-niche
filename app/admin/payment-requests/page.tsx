@@ -67,7 +67,7 @@ export default function AdminPaymentRequestPage(){
     try {
         const response = await axios.patch(`/api/admin/payment-requests/${id}`, {
             action: "reject",
-            rejectReason: rejectReason,
+            rejectedReason: rejectReason,
         });
         toast.success(response.data.message);
         setShowRejectModal(null);

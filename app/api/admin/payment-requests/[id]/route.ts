@@ -22,7 +22,7 @@ export async function PATCH(req: NextRequest,
 
     const {id} = await params;
     const body = await req.json();
-    const { action,rejectReason } = body;
+    const { action,rejectedReason } = body;
 
     if (!action || !["approve", "reject"].includes(action)) {
         return NextResponse.json(
@@ -31,7 +31,7 @@ export async function PATCH(req: NextRequest,
         );
     }
 
-    if (action === "reject" && !rejectReason) {
+    if (action === "reject" && !rejectedReason) {
         return NextResponse.json(
             {error: "Rejection reason is required "},
             {status: 400}
@@ -68,19 +68,54 @@ export async function PATCH(req: NextRequest,
         });
 
     // Upgrade user to pro user
+    const oneYearFormNow = new Date();
+    oneYearFormNow.setFullYear(oneYearFormNow.getFullYear() + 1);
 
+    const existingSubscription = await prisma.subscription.findUnique({
+        where: { userId: paymentRequest.userId},
+    });
 
-        
+    if (existingSubscription) {
+        await prisma.subscription.update({
+            where: { userId: paymentRequest.userId},
+            data: {
+                planType: "PRO",
+                isActive: true,
+                startDate: new Date(),
+                endDate: oneYearFormNow,
+            },
+        });
+    } else {
+        await prisma.subscription.create({
+            data: {
+                userId: paymentRequest.userId,
+                planType: "PRO",
+                isActive: true,
+                startDate: new Date(),
+                endDate: oneYearFormNow,
+            },
+        });
     }
+    return NextResponse.json({
+        message: "Payment approved and user upgraded to Pro",
+    });        
+  } else {
+    /// Reject payment request 
+    await prisma.paymentRequest.update({
+        where: {id},
+        data: {
+            status: "REJECTED",
+            rejectedReason,
+        },
+    });
 
+    return NextResponse.json({
+        message: "Payment request rejected",
+    });
 
-
-
-
+  }
  } catch (error) {
-    
- }
-
-
+    console.error("Update payment request error", error);
+ } 
 
 }
