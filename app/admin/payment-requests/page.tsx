@@ -34,6 +34,28 @@ export default function AdminPaymentRequestPage(){
   }
 
 
+  const handleApprove = async (id: string) => {
+
+    if (!confirm("Are you sure you want to approved this payment.")) {
+        return;
+    }
+
+    setProcessingId(id);
+
+    try {
+        const response = await axios.patch(`/api/admin/payment-requests/${id}`, {
+            action: "approve",
+        });
+        toast.success(response.data.message);
+        fetchPaymentRequests();
+    } catch (error) {
+        console.error("Approve error", error);
+    } finally {
+        setProcessingId(null);
+    }
+  };
+
+
   if (loading) {
     return (
         <div className="min-h-screen flex items-center justify-center">
@@ -153,12 +175,12 @@ export default function AdminPaymentRequestPage(){
         {request.status === "PENDING" && ( 
         <div className="flex gap-2 pt-2">
             <button
-            
-            
+            onClick={() => handleApprove(request.id)}
+            disabled={processingId === request.id}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
             <CheckCircle className="w-4 h-4 mr-2" />
-            Approve & Upgrade to Pro
+            {processingId === request.id ? "Processing..." : "Approve & Upgrade to Pro"} 
             </button>
             <button
             
