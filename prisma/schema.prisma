@@ -32,7 +32,7 @@ enum PaymentStatus {
 }
 
 
-// User Table Model 
+// User Table Model  
 model User {
   id                String @id @default(cuid())
   name              String?
