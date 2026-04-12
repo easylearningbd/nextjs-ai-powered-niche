@@ -24,6 +24,8 @@ export default function AdminUsersPage(){
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+    const [updatingPlan, setUpdatingPlan] = useState<string | null>(null);
 
     useEffect(() => {
         fetchUsers();
@@ -41,6 +43,45 @@ export default function AdminUsersPage(){
            setIsLoading(false); 
         }
     }
+
+
+    const handleUpdateRole = async (userId: string, newRole: string) => {
+        setUpdatingRole(userId);
+
+        try {
+            await axios.patch(`/api/admin/users/${userId}`, {role: newRole});
+            await fetchUsers();
+            alert("User role updated successfully");
+        } catch (error) {
+            console.error("Error updating role", error);
+        } finally {
+            setUpdatingRole(null);
+        }
+    };
+
+
+
+    const handleUpdatePlan = async (userId: string, newPlan: string) => {
+        setUpdatingPlan(userId);
+
+        try {
+            await axios.patch(`/api/admin/users/${userId}`, {planType: newPlan});
+            await fetchUsers();
+            alert("Subsciption plan updated successfully");
+        } catch (error) {
+            console.error("Error updating plan", error);
+        } finally {
+            setUpdatingPlan(null);
+        }
+    };
+
+
+
+
+
+
+
+
 
     const filteredUsers = users.filter((user) => 
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -141,8 +182,8 @@ return (
         <td className="px-4 py-4">
         <select
             value={user.role}
-            
-        
+            onChange={(e) => handleUpdateRole(user.id, e.target.value)}
+            disabled={updatingRole === user.id }
             className="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
         >
             <option value="USER">USER</option>
@@ -152,9 +193,9 @@ return (
         <td className="px-4 py-4">
         {user.subscription ? (
             <select
-            value=""
-            
-            
+            value={user.subscription.planType}
+            onChange={(e) => handleUpdatePlan(user.id, e.target.value)}
+            disabled={updatingPlan === user.id }            
             className="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
             >
             <option value="FREE">FREE</option>
