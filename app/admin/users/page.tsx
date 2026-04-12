@@ -77,6 +77,20 @@ export default function AdminUsersPage(){
 
 
 
+    const handleDeleteUser = async (userId: string, email: string) => {
+
+        if (!confirm("Are you user to delete this user")) {
+            return;
+        }
+
+        try {
+            await axios.delete(`/api/admin/users/${userId}`);
+            await fetchUsers();
+            alert("User deleted successfully");
+        } catch (error) {
+            console.error("Error for delete user", error);
+        }
+    }
 
 
 
@@ -221,7 +235,7 @@ return (
         </td>
         <td className="px-4 py-4">
         <button
-            
+            onClick={() => handleDeleteUser(user.id, user.email)}
             className="inline-flex items-center justify-center p-1.5 text-white bg-red-600 hover:bg-red-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-colors"
         >
             <Trash2 className="w-4 h-4" />
