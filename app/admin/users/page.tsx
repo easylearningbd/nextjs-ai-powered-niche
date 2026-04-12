@@ -7,6 +7,7 @@ interface User {
     id: string;
     name: string;
     email: string;
+    role: string;
     createdAt: string;
     subscription: {
         planType: string;
@@ -41,6 +42,10 @@ export default function AdminUsersPage(){
         }
     }
 
+    const filteredUsers = users.filter((user) => 
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+    );
 
 
 
@@ -61,8 +66,8 @@ return (
               <input
                 type="text"
                 placeholder="Search users by name or email..."
-                value="searchTerm"
-                
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -72,7 +77,7 @@ return (
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
           <div className="px-6 py-4">
             <p className="text-sm text-gray-600">Total Users</p>
-            <div className="text-3xl font-bold">length</div>
+            <div className="text-3xl font-bold">{users.length}</div>
           </div>
         </div>
       </div>
@@ -86,7 +91,7 @@ return (
           </h2>
         </div>
         <div className="px-6 py-4">
-          
+        {isLoading ? ( 
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="animate-pulse">
@@ -94,12 +99,12 @@ return (
                 </div>
               ))}
             </div>
-        
+        ) : ( filteredUsers.length === 0 ? ( 
             <div className="text-center py-12">
               <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">No users found</p>
             </div>
-          
+          ) : (  
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
@@ -125,64 +130,68 @@ return (
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  
-                    <tr  className="hover:bg-gray-50">
-                      <td className="px-4 py-4">
-                        <div>
-                          <div className="font-medium text-gray-900">name</div>
-                          <div className="text-sm text-gray-500">email</div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <select
-                          value=""
-                         
-                       
-                          className="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="USER">USER</option>
-                          <option value="ADMIN">ADMIN</option>
-                        </select>
-                      </td>
-                      <td className="px-4 py-4">
-                       
-                          <select
-                            value=""
-                            
-                           
-                            className="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="FREE">FREE</option>
-                            <option value="PRO">PRO</option>
-                          </select>
-                      
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                            No subscription
-                          </span>
-                      
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-sm text-gray-900">reports</span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-sm text-gray-500">
-                          
-                        </span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <button
-                          
-                          className="inline-flex items-center justify-center p-1.5 text-white bg-red-600 hover:bg-red-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
-                    </tr>
-                
+    {filteredUsers.map((user) => (               
+    <tr key={user.id}  className="hover:bg-gray-50">
+        <td className="px-4 py-4">
+        <div>
+            <div className="font-medium text-gray-900">{user.name || "No Name"}</div>
+            <div className="text-sm text-gray-500">{user.email}</div>
+        </div>
+        </td>
+        <td className="px-4 py-4">
+        <select
+            value={user.role}
+            
+        
+            className="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
+        >
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+        </select>
+        </td>
+        <td className="px-4 py-4">
+        {user.subscription ? (
+            <select
+            value=""
+            
+            
+            className="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
+            >
+            <option value="FREE">FREE</option>
+            <option value="PRO">PRO</option>
+            </select>
+         ) : ( 
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+            No subscription
+            </span>
+        )}
+        </td>
+        <td className="px-4 py-4">
+        <span className="text-sm text-gray-900">{user._count.reports}</span>
+        </td>
+        <td className="px-4 py-4">
+        <span className="text-sm text-gray-500">
+            {new Date(user.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            })}
+        </span>
+        </td>
+        <td className="px-4 py-4">
+        <button
+            
+            className="inline-flex items-center justify-center p-1.5 text-white bg-red-600 hover:bg-red-700 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-colors"
+        >
+            <Trash2 className="w-4 h-4" />
+        </button>
+        </td>
+    </tr>
+     )) }            
                 </tbody>
               </table>
             </div>
-          
+          ))} 
         </div>
       </div>
 
@@ -191,19 +200,19 @@ return (
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-6 py-4">
           <p className="text-sm text-gray-600">Admins</p>
           <div className="text-2xl font-bold text-red-600">
-          ADMIN
+          {users.filter((u) => u.role === "ADMIN").length}
           </div>
         </div>
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-6 py-4">
           <p className="text-sm text-gray-600">Pro Users</p>
           <div className="text-2xl font-bold text-purple-600">
-           PRO
+          {users.filter((u) => u.subscription?.planType === "PRO").length}
         </div>
         </div>
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-6 py-4">
           <p className="text-sm text-gray-600">Free Users</p>
           <div className="text-2xl font-bold text-blue-600">
-           FREE
+           {users.filter((u) => u.subscription?.planType === "FREE").length}
           </div>
         </div>
       </div>
