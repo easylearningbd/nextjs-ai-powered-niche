@@ -24,6 +24,26 @@ export default function AdminUsersPage(){
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
 
+    useEffect(() => {
+        fetchUsers();
+    },[]);
+
+
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get("/api/admin/users");
+            setUsers(response.data.users);
+            console.log("User data",response.data.users);
+        } catch (error) {
+            console.error("Error fetching users", error);
+        }finally{
+           setIsLoading(false); 
+        }
+    }
+
+
+
+
 return (
    <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
