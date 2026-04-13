@@ -103,6 +103,30 @@ function ProgressBar({
 }
 
 
+function StatusBadge({
+  status,
+  count,
+  icon: Icon,
+  color,
+  bg,
+}: {
+  status: string;
+  count: number;
+  icon: React.ElementType;
+  color: string;
+  bg: string;
+}) {
+  return (
+    <div className={`flex items-center justify-between p-4 rounded-lg ${bg}`}>
+      <div className="flex items-center gap-3">
+        <Icon className={`w-5 h-5 ${color}`} />
+        <span className="text-sm font-medium text-gray-800">{status}</span>
+      </div>
+      <span className={`text-2xl font-bold ${color}`}>{count}</span>
+    </div>
+  );
+}
+
 
 
 
@@ -255,11 +279,11 @@ return (
             <Target className="w-4 h-4 text-blue-600" />
             <p className="text-sm font-medium text-gray-600">Avg. Report Score</p>
           </div>
-          <div className="text-3xl font-bold text-gray-900">averageScore<span className="text-lg text-gray-400 font-normal">/100</span></div>
+          <div className="text-3xl font-bold text-gray-900">{analytics.averageScore}<span className="text-lg text-gray-400 font-normal">/100</span></div>
           <div className="mt-3 w-full bg-gray-100 rounded-full h-2">
             <div
               className="bg-blue-600 h-2 rounded-full"
-              style={{  }}
+              style={{ width: `${analytics.averageScore}%` }}
             />
           </div>
         </div>
@@ -269,7 +293,7 @@ return (
             <Zap className="w-4 h-4 text-yellow-600" />
             <p className="text-sm font-medium text-gray-600">Monthly Validations</p>
           </div>
-          <div className="text-3xl font-bold text-gray-900">monthlyValidations</div>
+          <div className="text-3xl font-bold text-gray-900">{analytics.monthlyValidations}</div>
           <p className="text-xs text-gray-500 mt-1">Current month total</p>
         </div>
 
@@ -278,11 +302,11 @@ return (
             <TrendingUp className="w-4 h-4 text-purple-600" />
             <p className="text-sm font-medium text-gray-600">Pro Conversion Rate</p>
           </div>
-          <div className="text-3xl font-bold text-gray-900">proConversionRate<span className="text-lg text-gray-400 font-normal">%</span></div>
+          <div className="text-3xl font-bold text-gray-900">{proConversionRate}<span className="text-lg text-gray-400 font-normal">%</span></div>
           <div className="mt-3 w-full bg-gray-100 rounded-full h-2">
             <div
               className="bg-purple-600 h-2 rounded-full"
-              style={{   }}
+              style={{ width: `${proConversionRate}%`  }}
             />
           </div>
         </div>
@@ -300,8 +324,34 @@ return (
             <p className="text-sm text-gray-500 mt-0.5">Breakdown of all validation reports</p>
           </div>
           <div className="px-6 py-4 space-y-3">
-            
-             
+        <StatusBadge
+            status="Completed"
+            count={analytics.reportsBreakdown.COMPLETED}
+            icon={CheckCircle}
+            color="text-green-600"
+            bg="bg-green-50"        
+        />
+        <StatusBadge
+            status="Processing"
+            count={analytics.reportsBreakdown.PROCESSING}
+            icon={Activity}
+            color="text-blue-600"
+            bg="bg-blue-50"        
+        />
+        <StatusBadge
+            status="Pending"
+            count={analytics.reportsBreakdown.PENDING}
+            icon={Clock}
+            color="text-yellow-600"
+            bg="bg-yellow-50"        
+        />
+        <StatusBadge
+            status="Failed"
+            count={analytics.reportsBreakdown.FAILED}
+            icon={XCircle}
+            color="text-red-600"
+            bg="bg-red-50"        
+        />        
             
           </div>
         </div>
@@ -403,22 +453,22 @@ return (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-blue-600 rounded-lg px-5 py-4 text-white">
           <p className="text-blue-200 text-xs font-medium uppercase tracking-wide">New Users</p>
-          <div className="text-3xl font-bold mt-1">newUsersThisMonth</div>
+          <div className="text-3xl font-bold mt-1">{analytics.newUsersThisMonth}</div>
           <p className="text-blue-200 text-xs mt-1">This month</p>
         </div>
         <div className="bg-green-600 rounded-lg px-5 py-4 text-white">
           <p className="text-green-200 text-xs font-medium uppercase tracking-wide">Recent Reports</p>
-          <div className="text-3xl font-bold mt-1">recentReports</div>
+          <div className="text-3xl font-bold mt-1">{analytics.recentReports}</div>
           <p className="text-green-200 text-xs mt-1">Last 7 days</p>
         </div>
         <div className="bg-purple-600 rounded-lg px-5 py-4 text-white">
           <p className="text-purple-200 text-xs font-medium uppercase tracking-wide">MRR</p>
-          <div className="text-3xl font-bold mt-1">$proRevenue</div>
+          <div className="text-3xl font-bold mt-1">${analytics.totalMRR}</div>
           <p className="text-purple-200 text-xs mt-1">Monthly recurring revenue</p>
         </div>
         <div className="bg-orange-500 rounded-lg px-5 py-4 text-white">
           <p className="text-orange-100 text-xs font-medium uppercase tracking-wide">Success Rate</p>
-          <div className="text-3xl font-bold mt-1">successRate%</div>
+          <div className="text-3xl font-bold mt-1">{successRate}%</div>
           <p className="text-orange-100 text-xs mt-1">Reports completed</p>
         </div>
       </div>
