@@ -70,6 +70,40 @@ function StatCard({
 
 
 
+function ProgressBar({
+  label,
+  value,
+  max,
+  color,
+  showPercent = false,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  color: string;
+  showPercent?: boolean;
+}) {
+  const percent = max > 0 ? Math.min((value / max) * 100, 100) : 0;
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1.5">
+        <span className="text-sm text-gray-600">{label}</span>
+        <span className="text-sm font-semibold text-gray-900">
+          {showPercent ? `${Math.round(percent)}%` : value}
+        </span>
+      </div>
+      <div className="w-full bg-gray-100 rounded-full h-2.5">
+        <div
+          className={`${color} h-2.5 rounded-full transition-all duration-700`}
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+
+
 
 
 
@@ -282,15 +316,29 @@ return (
             <p className="text-sm text-gray-500 mt-0.5">Plan distribution across all users</p>
           </div>
           <div className="px-6 py-4 space-y-5">
+        <ProgressBar
+            label="Pro Users"
+            value={analytics.planBreakdown.PRO}
+            max={analytics.totalUsers}
+            color="bg-purple-500"
+            showPercent
+        />
+        <ProgressBar
+            label="Free Users"
+            value={analytics.planBreakdown.FREE}
+            max={analytics.totalUsers}
+            color="bg-blue-500"
+            showPercent
+        />
            
 
             <div className="pt-2 border-t border-gray-100 grid grid-cols-2 gap-4">
               <div className="text-center p-3 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-700">PRO</div>
+                <div className="text-2xl font-bold text-purple-700">{analytics.planBreakdown.PRO}</div>
                 <div className="text-xs text-purple-600 mt-0.5">Pro Users</div>
               </div>
               <div className="text-center p-3 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-700">FREE</div>
+                <div className="text-2xl font-bold text-blue-700">{analytics.planBreakdown.FREE}</div>
                 <div className="text-xs text-blue-600 mt-0.5">Free Users</div>
               </div>
             </div>
@@ -310,19 +358,39 @@ return (
         <div className="px-6 py-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
+            <ProgressBar
+            label="Report Success Rate"
+            value={successRate}
+            max={100}
+            color="bg-green-500"
+            showPercent
+        />
               
               <p className="text-xs text-gray-500">
-                COMPLETED of   reports completed
+                {analytics.reportsBreakdown.COMPLETED} of {analytics.totalReports} reports completed
               </p>
             </div>
             <div className="space-y-2">
+            <ProgressBar
+            label="Report Failer Rate"
+            value={failureRate}
+            max={100}
+            color="bg-red-500"
+            showPercent
+        />
               
               <p className="text-xs text-gray-500">
-                  failed reports
+                {analytics.reportsBreakdown.FAILED}  failed reports
               </p>
             </div>
             <div className="space-y-2">
-               
+          <ProgressBar
+            label="Aveage Score Quality"
+            value={analytics.averageScore}
+            max={100}
+            color="bg-blue-500"
+            showPercent
+          />
               <p className="text-xs text-gray-500">
                 Based on all completed reports
               </p>
