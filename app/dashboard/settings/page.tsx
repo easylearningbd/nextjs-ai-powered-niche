@@ -30,10 +30,11 @@ export default function SettingsPage(){
     const [paymentRequests, setPaymentRequests] = useState<any[]>([]);
 
     const [isRefreshingStatus, setIsRefreshingStatus] = useState(false);
+    const [isCanceling, setIsCanceling] = useState(false);
 
     const subscription = (session?.user as any)?.subscription;
-    const isPro = subscription?.PlanType === "PRO" && subscription?.isActive;
-    
+    const isPro = subscription?.planType === "PRO" && subscription?.isActive;
+    //console.log("user data",isPro);
     useEffect(() => {
         fetchPaymentRequests();
     },[]);
@@ -188,6 +189,24 @@ export default function SettingsPage(){
     }finally {
         setIsRefreshingStatus(false);
     }
+
+ }
+
+
+
+ const handleCancelSubscription = async () => {
+
+    if (!confirm("Are you sure you want to downgrade to the free plan?")) return;
+    setIsCanceling(true);
+    try {
+        const response = await axios.post("/api/subscription/cancel");
+        await update();
+        toast.success(response.data.message);
+    } catch (error) {
+        console.error("Cancel error", error);
+    } finally {
+         setIsCanceling(false);
+    } 
 
  }
 
@@ -374,10 +393,11 @@ return (
     </ul>
 </div>
 <button
-    
+    onClick={handleCancelSubscription}
+    disabled={isCanceling}
     className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 >
-    Downgrade to Free
+  {isCanceling ? "Processing.." : "Downgrade to Free"}  
 </button>
 </>
 ) : ( 
