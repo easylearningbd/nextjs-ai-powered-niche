@@ -24,6 +24,33 @@ interface Analytics {
 }
 
 
+function StatCard({ 
+    title,
+    value,
+    subtitle,
+    icon: Icon,
+    iconColor,
+    trend, 
+  } : {
+    title: string;
+    value: string | number;
+    subtitle?: string;
+    icon: React.ElementType;
+    iconColor: string;
+    trend?: {value: number; label: string}
+
+}) {
+
+
+    
+}
+
+
+
+
+
+
+
 export default function AdminAnalyticsPage(){
 
      const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -42,7 +69,7 @@ export default function AdminAnalyticsPage(){
       const response = await axios.get("/api/admin/analytics");
       setAnalytics(response.data);
       setLastUpdated(new Date());
-      //console.log("total data",response.data);
+       console.log("total data",response.data);
 
     } catch (error) {
       console.error("Error fetching analytics", error);
@@ -89,7 +116,19 @@ export default function AdminAnalyticsPage(){
     );
   }
 
-
+  const proRevenue = analytics.planBreakdown.PRO * 29;
+  const successRate = 
+        analytics.totalReports > 0 
+        ? Math.round((analytics.reportsBreakdown.COMPLETED / analytics.totalReports) * 100)
+        : 0;
+  const proConversionRate = 
+        analytics.totalUsers > 0 
+         ? Math.round((analytics.planBreakdown.PRO / analytics.totalUsers) * 100)
+        : 0;
+  const failureRate = 
+        analytics.totalReports > 0
+        ? Math.round((analytics.reportsBreakdown.FAILED / analytics.totalReports) * 100)
+        : 0;
 
 return (
       <div className="max-w-7xl mx-auto space-y-6">
