@@ -41,8 +41,31 @@ function StatCard({
 
 }) {
 
+    return (
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+            <div className="px-6 pt-5 pb-1 flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-600">{title}</p>
+                <div className={`p-2 rounded-lg ${iconColor} bg-opacity-10`}>
+                    <Icon className={`h-5 w-5 ${iconColor}`} />
+                </div> 
+            </div>
 
-    
+        <div className="px-6 pb-5">
+            <div className="text-3xl font-bold text-gray-900 mt-1">
+                {value}
+            </div>
+        {subtitle && (
+            <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+        )}
+        {trend && (
+            <div className="flex items-center gap-1 mt-2">
+        <ArrowUpRight className="w-3 h-3 text-gray-500" />
+           <span>+{trend.value} {trend.label}</span>
+            </div> 
+        )} 
+        </div>
+        </div>
+    ); 
 }
 
 
@@ -157,7 +180,36 @@ return (
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        
+        <StatCard
+        title="Total Users" 
+        value={analytics.totalUsers} 
+        icon= {Users}
+        iconColor="text-blue-600"
+        trend={{ value: analytics.newUsersThisMonth, label: "This month" }}
+        />
+        <StatCard
+        title="Total Reports" 
+        value={analytics.totalReports} 
+        subtitle={`${analytics.recentReports} in last 7 days`}
+        icon= {FileText}
+        iconColor="text-green-600"        
+        />
+
+        <StatCard
+        title="Pro Subscribers" 
+        value={analytics.planBreakdown.PRO} 
+        icon= {TrendingUp}
+        subtitle={`${analytics.planBreakdown.FREE} free users`}
+        iconColor="text-purple-600"        
+        />
+
+        <StatCard
+        title="Monthly Revenue" 
+        value={analytics.totalMRR} 
+        subtitle={`${analytics.totalMRR} Total month`}
+        icon= {DollarSign}
+        iconColor="text-emerald-600"      
+        />
         
        
       </div>
