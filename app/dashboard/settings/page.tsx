@@ -201,6 +201,7 @@ export default function SettingsPage(){
     try {
         const response = await axios.post("/api/subscription/cancel");
         await update();
+        router.refresh();
         toast.success(response.data.message);
     } catch (error) {
         console.error("Cancel error", error);
